@@ -29,7 +29,7 @@ sub validate_args {
   
   if ( $opt->{finishdate} ) {
     eval {
-      $opt->{finishdate} = Booklist::ymd2epoch( $opt->{finishdate} ); 
+      $opt->{finishdate} = Booklist->ymd2epoch( $opt->{finishdate} ); 
     };
     $self->usage_error( $@ ) if ( $@ );
   }
@@ -74,26 +74,11 @@ sub run {
 
   my $title = $book->title;
 
-  my $start    = DateTime->from_epoch( epoch => $reading->startdate()  );
-  my $finish   = DateTime->from_epoch( epoch => $reading->finishdate() );
-  my $duration = $finish - $start;
+  my $duration;
+  eval { $duration = Booklist->calc_reading_duration( $reading ) };
+  die "$@" if $@;
   
-  my( $mo , $dy ) = $duration->in_units( 'months' , 'days'  );
-
-  my $dys = 's';
-  $dys = '' if $dy == 1;
-    
-  if ( $mo ) {
-    my $mos = '';
-    $mos = 's' if $mo > 1;
-
-    $duration = sprintf "Read for %d month%s, %d day%s\n" , $mo , $mos , $dy , $dys;
-  }
-  else {
-    $duration = sprintf "Read for %d day%s\n" , $dy , $dys; 
-  }
-  
-  print "Finished reading '$title'\n$duration";
+  print "Finished reading '$title'\nRead for $duration";
   exit;
 }
 
@@ -104,13 +89,12 @@ __END__
 
 =head1 NAME
 
-Booklist::Cmd::start - start reading a book
+Booklist::Cmd::Command::finish - finish reading a book
 
 =head1 SYNOPSIS
 
-    booklist start --title $TITLE --author $AUTHOR --pages $PAGES [ --startedate $YYYYMMDD ]
-
-    booklist start -t $TITLE -a $AUTHOR -p $PAGES [ -d $YYYYMMDD ]
+    booklist finish --title $TITLE [ --finishdate $YYYYMMDD ]
+    booklist finish -t $TITLE [ -d $YYYYMMDD ]
 
 =head1 BUGS AND LIMITATIONS
 
