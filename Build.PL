@@ -18,7 +18,7 @@ my $builder = Module::Build->new(
       'version'    => 0 ,
     },
     script_files        => [ 'bin/booklist' ] ,
-    add_to_cleanup      => [ 'Booklist-*' ],
+    add_to_cleanup      => [ 'Booklist-*' , '*.bak' ],
 );
 
 $builder->create_build_script();
