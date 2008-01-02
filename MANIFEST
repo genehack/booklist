@@ -1,0 +1,11 @@
+Build.PL
+Changes
+MANIFEST
+README
+lib/Booklist.pm
+lib/Booklist/Cmd.pm
+lib/Booklist/Cmd/start.pm
+t/00.load.t
+t/perlcritic.t
+t/pod-coverage.t
+t/pod.t
