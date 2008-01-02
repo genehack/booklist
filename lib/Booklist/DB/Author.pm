@@ -18,7 +18,7 @@ __PACKAGE__->set_primary_key( 'id' );
 
 __PACKAGE__->has_many( authorsbooks => 'Booklist::DB::AuthorBook' => 'author' );
 
-__PACKAGE__->many_to_many( books => 'Booklist::DB::AuthorBook' => 'book' );
+__PACKAGE__->many_to_many( books => 'authorsbooks' => 'book' );
 
 
 
