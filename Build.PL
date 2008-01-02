@@ -12,8 +12,10 @@ my $builder = Module::Build->new(
     dist_author         => 'John SJ Anderson <genehack@genehack.org>',
     dist_version_from   => 'lib/Booklist.pm',
     requires => {
-        'Test::More' => 0,
-        'version'    => 0,
+      'DateTime'   => 0 ,
+      'FindBin'    => 0 ,
+      'Test::More' => 0 ,
+      'version'    => 0 ,
     },
     script_files        => [ 'bin/booklist' ] ,
     add_to_cleanup      => [ 'Booklist-*' ],
