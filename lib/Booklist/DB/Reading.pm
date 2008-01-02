@@ -5,7 +5,6 @@ package Booklist::DB::Reading;
 
 use warnings;
 use strict;
-use Carp;
 
 use base qw/ DBIx::Class /;
 
