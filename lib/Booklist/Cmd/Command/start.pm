@@ -31,7 +31,7 @@ sub validate_args {
 
   if ( $opt->{startdate} ) {
     eval {
-      $opt->{startdate} = Booklist::ymd2epoch( $opt->{startdate} ); 
+      $opt->{startdate} = Booklist->ymd2epoch( $opt->{startdate} ); 
     };
     $self->usage_error( $@ ) if ( $@ );
   }
@@ -107,12 +107,11 @@ __END__
 
 =head1 NAME
 
-Booklist::Cmd::start - start reading a book
+Booklist::Cmd::Command::start - start reading a book
 
 =head1 SYNOPSIS
 
     booklist start --title $TITLE --author $AUTHOR --pages $PAGES [ --date $YYYYMMDD ]
-
     booklist start -t $TITLE -a $AUTHOR -p $PAGES [ -d $YYYYMMDD ]
 
 =head1 BUGS AND LIMITATIONS
