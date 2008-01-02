@@ -70,6 +70,18 @@ Booklist - Convenience functions for the 'booklist' application.
 
 You don't use this directly. 
 
+=head1 INTERFACE
+
+=head2 db_handle
+
+Returns a DBIx::Class::Schema object connected to the booklist database
+
+=head2 ymd2epoch
+
+Converts a 'YYYYMMDD' string into epoch time.
+
+
+
 =head1 BUGS AND LIMITATIONS
 
 No bugs have been reported.
