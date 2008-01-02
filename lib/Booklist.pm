@@ -14,6 +14,35 @@ use FindBin;
 use lib "$FindBin::Bin/../lib";
 use Booklist::DB;
 
+sub calc_reading_duration {
+  my( $class , $reading ) = @_;
+
+  die "No reading provided" unless $reading;
+  
+  my $start    = DateTime->from_epoch( epoch => $reading->startdate()  );
+  my $finish   = DateTime->from_epoch( epoch => $reading->finishdate() );
+  my $duration = $finish - $start;
+
+  die "Couldn't calculate duration" unless $duration;
+    
+  my( $mo , $dy ) = $duration->in_units( 'months' , 'days'  );
+
+  my $dys = 's';
+  $dys = '' if $dy == 1;
+    
+  if ( $mo ) {
+    my $mos = '';
+    $mos = 's' if $mo > 1;
+
+    $duration = sprintf "%d month%s, %d day%s" , $mo , $mos , $dy , $dys;
+  }
+  else {
+    $duration = sprintf "%d day%s" , $dy , $dys; 
+  }
+  
+  return $duration;
+}
+
 my $db;
 sub db_handle {
   return $db if $db;
@@ -28,9 +57,21 @@ sub db_handle {
   return $db;
 
 }
+
+sub epoch2ymd {
+  my( $class , $date ) = @_;
+
+  my $t;
+  eval {
+    $t = DateTime->from_epoch( epoch => $date );
+  };
+  die $@ if $@;
   
+  return sprintf "%4d%02d%02d" , $t->year , $t->month , $t->day;
+}
+
 sub ymd2epoch {
-  my( $date )  = @_;
+  my( $class , $date )  = @_;
   
   die "Date must be in YYYYMMDD format"
     unless $date =~ /^\d{8}$/;
@@ -72,15 +113,30 @@ You don't use this directly.
 
 =head1 INTERFACE
 
+=head2 calc_reading_duration
+
+    my $duration = Booklist->calc_reading_duration( $reading_dbic_row_obj );
+
+Calculates and returns the time between the 'start' and 'finish' times of a
+reading object (a row from the Reading table).
+
 =head2 db_handle
+
+    my $db = Booklist->db_handle();
 
 Returns a DBIx::Class::Schema object connected to the booklist database
 
+=head2 epoch2ymd
+
+    my $ymd = Booklist->epoch2ymd( $epoch_time_value );
+
+Converts epoch time into a 'YYYYMMDD' string
+
 =head2 ymd2epoch
 
+    my $epoch_time_value = Booklist->ymd2epoch( $ymd );
+
 Converts a 'YYYYMMDD' string into epoch time.
-
-
 
 =head1 BUGS AND LIMITATIONS
 
