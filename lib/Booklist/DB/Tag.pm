@@ -1,4 +1,4 @@
-package Booklist::DB::Book;
+package Booklist::DB::Tag;
 
 # $Id$
 # $URL$
@@ -10,18 +10,16 @@ use base qw/ DBIx::Class /;
 
 __PACKAGE__->load_components( qw/ PK::Auto Core / );
 
-__PACKAGE__->table( 'books' );
+__PACKAGE__->table( 'tags' );
 
-__PACKAGE__->add_columns( qw/ id pages title / );
+__PACKAGE__->add_columns( qw/ id tag / );
 
 __PACKAGE__->set_primary_key( 'id' );
 
-__PACKAGE__->has_many( authorsbooks => 'Booklist::DB::AuthorBook' => 'book' );
-__PACKAGE__->has_many( bookstags    => 'Booklist::DB::BookTag'    => 'book' );
-__PACKAGE__->has_many( readings     => 'Booklist::DB::Reading' );
+__PACKAGE__->has_many( bookstags => 'Booklist::DB::BookTag' => 'tag' );
 
-__PACKAGE__->many_to_many( authors => 'authorsbooks' , 'author' );
-__PACKAGE__->many_to_many( tags    => 'bookstags'    , 'tag'    );
+__PACKAGE__->many_to_many( books => 'bookstags' , 'book' );
+
 
 1; # Magic true value required at end of module
 
@@ -32,7 +30,7 @@ __END__
 
 =head1 NAME
 
-Booklist::DB::Book - DBIC table class for the 'book' table.
+Booklist::DB::Tag - DBIC table class for the 'tag' table.
 
 =head1 SYNOPSIS
 
