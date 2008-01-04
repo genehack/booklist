@@ -2,7 +2,10 @@ bin/booklist
 Build.PL
 lib/Booklist.pm
 lib/Booklist/Cmd.pm
+lib/Booklist/Cmd/Command/authors.pm
 lib/Booklist/Cmd/Command/finish.pm
+lib/Booklist/Cmd/Command/list.pm
+lib/Booklist/Cmd/Command/make_database.pm
 lib/Booklist/Cmd/Command/start.pm
 lib/Booklist/DB.pm
 lib/Booklist/DB/Author.pm
