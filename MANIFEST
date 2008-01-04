@@ -11,10 +11,11 @@ lib/Booklist/DB.pm
 lib/Booklist/DB/Author.pm
 lib/Booklist/DB/AuthorBook.pm
 lib/Booklist/DB/Book.pm
+lib/Booklist/DB/BookTag.pm
 lib/Booklist/DB/Reading.pm
+lib/Booklist/DB/Tag.pm
 MANIFEST
 README
-sql/booklist.sql
 t/00.load.t
 t/perlcritic.t
 t/pod-coverage.t
