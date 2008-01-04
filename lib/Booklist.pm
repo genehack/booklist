@@ -45,17 +45,38 @@ sub calc_reading_duration {
 
 my $db;
 sub db_handle {
+  my( $class ) = ( @_ );
+  
   return $db if $db;
-    
-  ### FIXME should get location of database from config or env 
-  chdir "$FindBin::RealBin/..";
+
+  my $DB_FILE = db_location();
+
+  die "Can't find database at '$DB_FILE' -- maybe run 'make_database'?"
+    unless -e $DB_FILE;
+  
   $db = Booklist::DB->connect(
-    'dbi:SQLite:db/booklist.db',
+    "dbi:SQLite:$DB_FILE",
     q{}, q{}, { AutoCommit => 1 } ,
   );
 
   return $db;
+}
 
+my $DB_FILE;
+sub db_location {
+  my( $class ) = ( @_ );
+  
+  return $DB_FILE if $DB_FILE;
+
+  if ( $ENV{BOOKLIST_DB} ) {
+    $DB_FILE = $ENV{BOOKLIST_DB};
+  }
+  ### FIXME finish implementing
+  #elsif ( -e "$ENV{HOME}/.booklistrc") {
+  #}
+  else {
+    $DB_FILE = "$ENV{HOME}/.booklist.db";
+  }
 }
 
 sub epoch2ymd {
@@ -125,6 +146,13 @@ reading object (a row from the Reading table).
     my $db = Booklist->db_handle();
 
 Returns a DBIx::Class::Schema object connected to the booklist database
+
+=head2 db_location 
+
+    my $dbfile = Booklist->db_location();
+
+Returns the filesystem path to the file containing the Booklist SQLite
+database.
 
 =head2 epoch2ymd
 
