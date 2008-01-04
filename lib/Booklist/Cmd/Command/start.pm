@@ -15,9 +15,9 @@ use Booklist;
 
 sub opt_spec {
   (
-    [ 'title|t=s'           , 'book title (required)'      , { required => 1 } ] ,
-    [ 'author|a=s@'         , 'book author (required)'     , { required => 1 } ] ,
-    [ 'pages|p=s'           , 'book page count (required)' , { required => 1 } ] ,
+    [ 'title|t=s'           , 'book title (required)'      ] , 
+    [ 'author|a=s@'         , 'book author (required)'     ] , 
+    [ 'pages|p=s'           , 'book page count (required)' ] ,
     [ ] ,
     [ 'startdate|start|d=s' , 'date started reading (optional; defaults to today)' ] ,
   );
@@ -35,6 +35,12 @@ sub validate_args {
     };
     $self->usage_error( $@ ) if ( $@ );
   }
+
+  foreach my $var ( qw/ title author pages / ) {
+    $self->usage_error( "$var is a required option" )
+      unless $opt->{$var};
+  }
+
 }
 
 
