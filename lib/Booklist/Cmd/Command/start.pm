@@ -15,11 +15,12 @@ use Booklist;
 
 sub opt_spec {
   (
-    [ 'title|t=s'           , 'book title (required)'      ] , 
-    [ 'author|a=s@'         , 'book author (required)'     ] , 
-    [ 'pages|p=s'           , 'book page count (required)' ] ,
+    [ 'title|t=s'           , 'book title (required)'                   ] , 
+    [ 'author|a=s@'         , 'book author (required; can be multiple)' ] , 
+    [ 'pages|p=s'           , 'book page count (required)'              ] ,
     [ ] ,
-    [ 'startdate|start|d=s' , 'date started reading (optional; defaults to today)' ] ,
+    [ 'startdate|start|d=s' , 'date started reading (optional; defaults to today)'                ] ,
+    [ 'tag|T=s@'            , 'tags/categories to apply to this book (optional, can be multiple)' ] ,
   );
 }
 
@@ -49,9 +50,16 @@ sub run {
 
   my $db = Booklist->db_handle();
 
+  # FIXME need to modify both authors and tags to DTRT with comma-delim'd inputs
+  
   my @authors;
   foreach my $author ( @{ $opt->{author} } ) {
     push @authors , $db->resultset('Author')->find_or_create({ author => $author });
+  }
+
+  my @tags;
+  foreach my $tag ( @{ $opt->{tag} } ) {
+    push @tags , $db->resultset('Tag')->find_or_create({ tag => $tag });
   }
   
   my $book = $db->resultset('Book')->find_or_create({
@@ -65,9 +73,14 @@ sub run {
       book   => $book->id   ,
     });
   }
+
+  foreach my $tag ( @tags ) {
+    $db->resultset('BookTag')->find_or_create({
+      book => $book->id ,
+      tag  => $tag->id  ,
+    });
+  }
   
-  $book->update();
-    
   my $startdate;
   if ( $opt->{startdate} ) {
     $startdate = $opt->{startdate};

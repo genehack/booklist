@@ -85,6 +85,17 @@ CREATE TABLE authors_books (
   PRIMARY KEY (author,book)
 );
 
+CREATE TABLE tags (
+  id       INTEGER PRIMARY KEY,
+  tag      TEXT
+);
+
+CREATE TABLE books_tags (
+  book     INTEGER,
+  tag      INTEGER,
+  PRIMARY KEY (book,tag)
+);
+
 CREATE TABLE readings (
   id           INTEGER PRIMARY KEY,
   book         INTEGER,

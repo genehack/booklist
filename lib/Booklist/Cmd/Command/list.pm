@@ -65,7 +65,8 @@ sub run {
   while ( my $reading = $readings->next) {
     my $book    = sprintf "%3d:\n%s" , $count , $reading->book->title;
     my $names   = join ' & ' , map { $_->author } $reading->book->authors;
-
+    my $tags    = join ', ' , map { $_->tag } $reading->book->tags;
+    
     my $time    = sprintf "  STARTED: %d" , Booklist->epoch2ymd( $reading->startdate );
     if ( $reading->finishdate ) {
       my $duration = Booklist->calc_reading_duration( $reading );
@@ -75,6 +76,7 @@ sub run {
 
     print <<EOL;
 $book by $names
+CATEGORIES: $tags
 $time
 
 EOL
