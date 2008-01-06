@@ -18,6 +18,8 @@ my $builder = Module::Build->new(
       'DBIx::Class'         => 0 ,
       'DBIx::Class::Schema' => 0 ,
       'FindBin'             => 0 ,
+      'Test::Exception'     => 0 ,
+      'Test::File'          => 0 ,
       'Test::More'          => 0 ,
       'version'             => 0 ,
     },
