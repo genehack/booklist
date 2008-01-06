@@ -19,6 +19,32 @@ __PACKAGE__->set_primary_key( 'id' );
 __PACKAGE__->belongs_to( book => 'Booklist::DB::Book' );
 
 
+sub calc_reading_duration {
+  my( $self ) = @_;
+
+  my $start    = DateTime->from_epoch( epoch => $self->startdate()  );
+  my $finish   = DateTime->from_epoch( epoch => $self->finishdate() );
+  my $duration = $finish - $start;
+
+  die "Couldn't calculate duration" unless $duration;
+    
+  my( $mo , $dy ) = $duration->in_units( 'months' , 'days'  );
+
+  my $dys = 's';
+  $dys = '' if $dy == 1;
+    
+  if ( $mo ) {
+    my $mos = '';
+    $mos = 's' if $mo > 1;
+
+    $duration = sprintf "%d month%s, %d day%s" , $mo , $mos , $dy , $dys;
+  }
+  else {
+    $duration = sprintf "%d day%s" , $dy , $dys; 
+  }
+  
+  return $duration;
+}
 
 
 
@@ -35,6 +61,16 @@ Booklist::DB::Reading - DBIC table class for the 'reading' table.
 =head1 SYNOPSIS
 
 Autoloaded by DBIC framework. 
+
+=head1 INTERFACE
+
+=head2 calc_reading_duration
+
+    my $duration = $reading->calc_reading_duration();
+
+Calculates and returns the time between the 'start' and 'finish' times of a
+reading object.
+
 
 =head1 BUGS AND LIMITATIONS
 

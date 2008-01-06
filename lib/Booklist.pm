@@ -10,38 +10,13 @@ use version; our $VERSION = qv('0.0.1');
 
 use DateTime;
 use FindBin;
+use YAML             qw/ LoadFile /;
 
 use lib "$FindBin::Bin/../lib";
 use Booklist::DB;
 
-sub calc_reading_duration {
-  my( $class , $reading ) = @_;
+my $rc_file = "$ENV{HOME}/.booklistrc";
 
-  die "No reading provided" unless $reading;
-  
-  my $start    = DateTime->from_epoch( epoch => $reading->startdate()  );
-  my $finish   = DateTime->from_epoch( epoch => $reading->finishdate() );
-  my $duration = $finish - $start;
-
-  die "Couldn't calculate duration" unless $duration;
-    
-  my( $mo , $dy ) = $duration->in_units( 'months' , 'days'  );
-
-  my $dys = 's';
-  $dys = '' if $dy == 1;
-    
-  if ( $mo ) {
-    my $mos = '';
-    $mos = 's' if $mo > 1;
-
-    $duration = sprintf "%d month%s, %d day%s" , $mo , $mos , $dy , $dys;
-  }
-  else {
-    $duration = sprintf "%d day%s" , $dy , $dys; 
-  }
-  
-  return $duration;
-}
 
 my $db;
 sub db_handle {
@@ -49,11 +24,8 @@ sub db_handle {
   
   return $db if $db;
 
-  my $DB_FILE = db_location();
+  my $DB_FILE = $class->db_location;
 
-  die "Can't find database at '$DB_FILE' -- maybe run 'make_database'?"
-    unless -e $DB_FILE;
-  
   $db = Booklist::DB->connect(
     "dbi:SQLite:$DB_FILE",
     q{}, q{}, { AutoCommit => 1 } ,
@@ -71,11 +43,19 @@ sub db_location {
   if ( $ENV{BOOKLIST_DB} ) {
     $DB_FILE = $ENV{BOOKLIST_DB};
   }
-  ### FIXME finish implementing
-  #elsif ( -e "$ENV{HOME}/.booklistrc") {
-  #}
+  elsif ( -e $rc_file ) {
+    my $config = LoadFile( $rc_file );
+    $DB_FILE = $config->{db_file} || '';
+  }
   else {
     $DB_FILE = "$ENV{HOME}/.booklist.db";
+  }
+
+  if( -e $DB_FILE ) {
+    return $DB_FILE;
+  }
+  else {
+    die "Database file '$DB_FILE' doesn't exist -- maybe run 'make_database' command?";
   }
 }
 
@@ -133,13 +113,6 @@ Booklist - Convenience functions for the 'booklist' application.
 You don't use this directly. 
 
 =head1 INTERFACE
-
-=head2 calc_reading_duration
-
-    my $duration = Booklist->calc_reading_duration( $reading_dbic_row_obj );
-
-Calculates and returns the time between the 'start' and 'finish' times of a
-reading object (a row from the Reading table).
 
 =head2 db_handle
 

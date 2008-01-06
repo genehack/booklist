@@ -75,7 +75,7 @@ sub run {
   my $title = $book->title;
 
   my $duration;
-  eval { $duration = Booklist->calc_reading_duration( $reading ) };
+  eval { $duration = $reading->calc_reading_duration };
   die "$@" if $@;
   
   print "Finished reading '$title'\nRead for $duration";

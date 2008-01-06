@@ -69,7 +69,7 @@ sub run {
     
     my $time    = sprintf "  STARTED: %d" , Booklist->epoch2ymd( $reading->startdate );
     if ( $reading->finishdate ) {
-      my $duration = Booklist->calc_reading_duration( $reading );
+      my $duration = $reading->calc_reading_duration();
       $time = sprintf "%s    FINISHED: %d   ($duration)" ,
         $time , Booklist->epoch2ymd( $reading->finishdate );
     }
