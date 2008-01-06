@@ -17,6 +17,9 @@ lib/Booklist/DB/Tag.pm
 MANIFEST
 README
 t/00.load.t
+t/01.db_location.t
+t/02.make_database.t
+t/03.date_handling.t
 t/perlcritic.t
 t/pod-coverage.t
 t/pod.t
