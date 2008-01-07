@@ -61,7 +61,8 @@ sub run {
   close( $SQLITE );
   close( DATA );
   
-  exit;
+  print "Created database at $db_file\n";
+  
 }
 
 
