@@ -50,16 +50,19 @@ sub run {
 
   my $db = Booklist->db_handle();
 
-  # FIXME need to modify both authors and tags to DTRT with comma-delim'd inputs
-  
   my @authors;
   foreach my $author ( @{ $opt->{author} } ) {
-    push @authors , $db->resultset('Author')->find_or_create({ author => $author });
+    foreach my $a ( split /\s*,\s*/ , $author ) {
+      push @authors ,
+        $db->resultset('Author')->find_or_create({ author => $a });
+    }
   }
 
   my @tags;
   foreach my $tag ( @{ $opt->{tag} } ) {
-    push @tags , $db->resultset('Tag')->find_or_create({ tag => $tag });
+    foreach my $t ( split /\s*,\s*/ , $tag ) {
+      push @tags , $db->resultset('Tag')->find_or_create({ tag => $t });
+    }
   }
   
   my $book = $db->resultset('Book')->find_or_create({
@@ -94,9 +97,10 @@ sub run {
     finishdate => undef ,
   });
   
+  my $title = $book->title;
+
   if ( $reading_count ) {
-    my $start = DateTime->from_epoch( epoch => $reading_count->startdate() )->ymd;
-    my $title = $book->title;
+    my $start = $reading_count->start_as_ymd();
     
     print STDERR <<EOL;
 You seem to already be reading that book
@@ -114,9 +118,7 @@ EOL
     finishdate => undef      ,
   } );
 
-  my $title = $book->title;
   print "Started to read '$title'\n";
-  exit;
 }
 
 
