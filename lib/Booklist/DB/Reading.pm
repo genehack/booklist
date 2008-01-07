@@ -46,7 +46,10 @@ sub calc_reading_duration {
   return $duration;
 }
 
-
+sub start_as_ymd {
+  my( $self ) = @_;
+  return DateTime->from_epoch( epoch => $self->startdate() )->ymd;
+}
 
 1; # Magic true value required at end of module
 
@@ -71,6 +74,12 @@ Autoloaded by DBIC framework.
 Calculates and returns the time between the 'start' and 'finish' times of a
 reading object.
 
+
+=head2 start_as_ymd
+
+    my $ymd_date = $reading->start_as_ymd();
+
+Returns the reading start time as a YMD-formatted date.
 
 =head1 BUGS AND LIMITATIONS
 
