@@ -25,7 +25,9 @@ sub db_handle {
   return $db if $db;
 
   my $DB_FILE = $class->db_location;
-
+  die "Database file '$DB_FILE' doesn't exist -- maybe run 'make_database' command?"
+    unless -e $DB_FILE;
+  
   $db = Booklist::DB->connect(
     "dbi:SQLite:$DB_FILE",
     q{}, q{}, { AutoCommit => 1 } ,
@@ -51,12 +53,6 @@ sub db_location {
     $DB_FILE = "$ENV{HOME}/.booklist.db";
   }
 
-  if( -e $DB_FILE ) {
-    return $DB_FILE;
-  }
-  else {
-    die "Database file '$DB_FILE' doesn't exist -- maybe run 'make_database' command?";
-  }
 }
 
 sub epoch2ymd {
@@ -64,20 +60,21 @@ sub epoch2ymd {
 
   my $t;
   eval {
-    $t = DateTime->from_epoch( epoch => $date );
+    $t = DateTime->from_epoch( epoch => $date )->ymd;
   };
   die $@ if $@;
   
-  return sprintf "%4d%02d%02d" , $t->year , $t->month , $t->day;
+  return $t;
 }
 
 sub ymd2epoch {
   my( $class , $date )  = @_;
-  
+
+
   die "Date must be in YYYYMMDD format"
-    unless $date =~ /^\d{8}$/;
-    
-  my( $yr , $mo , $dy ) = $date =~ /^(\d{4})(\d{2})(\d{2})$/;
+    unless $date =~ /^(\d{8}|\d{4}-\d{2}-\d{2})$/;
+  
+  my ( $yr , $mo , $dy ) = $date =~ /^(\d{4})-?(\d{2})-?(\d{2})$/;
 
   my $t;
   eval {
