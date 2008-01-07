@@ -6,5 +6,6 @@
 ^MANIFEST\.SKIP$
 .svn
 ^.ignore
+^cover_db
 ^db
 
