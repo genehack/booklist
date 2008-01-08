@@ -2,11 +2,12 @@
 # $Id$
 # $URL$
 
-use Test::More tests => 14;
+use Test::More tests => 15;
 
 BEGIN {
 use_ok( 'Booklist' );
 use_ok( 'Booklist::Cmd' );
+use_ok( 'Booklist::Cmd::Command::add' );
 use_ok( 'Booklist::Cmd::Command::authors' );
 use_ok( 'Booklist::Cmd::Command::finish' );
 use_ok( 'Booklist::Cmd::Command::list' );
