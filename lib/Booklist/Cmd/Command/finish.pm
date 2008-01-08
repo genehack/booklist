@@ -15,7 +15,7 @@ use Booklist;
 
 sub opt_spec {
   (
-    [ 'title|t=s'             , 'book title (required)'      , { required => 1 } ] ,
+    [ 'id|i=s'                , 'book id'    ] ,
     [ ] ,
     [ 'finishdate|finish|d=s' , 'date finished reading (optional; defaults to today)' ] ,
   );
@@ -26,6 +26,9 @@ sub validate_args {
   
   # no args allowed but options!
   $self->usage_error("No args allowed") if @$args;
+
+  $self->usage_error("Must give '--id' argument")
+    unless $opt->{id};
   
   if ( $opt->{finishdate} ) {
     eval {
@@ -41,12 +44,10 @@ sub run {
 
   my $db = Booklist->db_handle();
 
-  my $book = $db->resultset('Book')->find( {
-    title => $opt->{title}
-  } );
+  my $book = $db->resultset('Book')->find($opt->{id});
 
   unless ( $book ) {
-    print STDERR "Hmm. I can't seem to find a book with that title...";
+    print STDERR "Hmm. I can't seem to find a book with that ID...";
     exit(1);
   }
 
@@ -69,7 +70,6 @@ sub run {
   }
   
   $reading->finishdate( $finishdate );
-  
   $reading->update();
 
   my $title = $book->title;
@@ -79,7 +79,6 @@ sub run {
   die "$@" if $@;
   
   print "Finished reading '$title'\nRead for $duration";
-  exit;
 }
 
 
@@ -93,8 +92,8 @@ Booklist::Cmd::Command::finish - finish reading a book
 
 =head1 SYNOPSIS
 
-    booklist finish --title $TITLE [ --finishdate $YYYYMMDD ]
-    booklist finish -t $TITLE [ -d $YYYYMMDD ]
+    booklist finish --id $ID [ --finishdate $YYYYMMDD ]
+    booklist finish -i $ID [ -d $YYYYMMDD ]
 
 =head1 BUGS AND LIMITATIONS
 
