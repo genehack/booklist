@@ -18,6 +18,53 @@ use Booklist::DB;
 my $rc_file = "$ENV{HOME}/.booklistrc";
 
 
+sub add_book {
+  my( $class , $opt ) = ( @_ );
+
+  my $db = $class->db_handle();
+  
+  my @authors;
+  foreach my $author ( @{ $opt->{author} } ) {
+    foreach my $a ( split /\s*,\s*/ , $author ) {
+      push @authors ,
+        $db->resultset('Author')->find_or_create({ author => $a });
+    }
+  }
+
+  my @tags;
+  foreach my $tag ( @{ $opt->{tag} } ) {
+    foreach my $t ( split /\s*,\s*/ , $tag ) {
+      push @tags , $db->resultset('Tag')->find_or_create({ tag => $t });
+    }
+  }
+  
+  my $book = $db->resultset('Book')->find_or_create({
+    title  => $opt->{title} ,
+    pages  => $opt->{pages} ,
+  });
+
+
+  $book->added( time() );
+  $book->update();
+  
+    
+  foreach my $author ( @authors ) {
+    $db->resultset('AuthorBook')->find_or_create({
+      author => $author->id ,
+      book   => $book->id   ,
+    });
+  }
+
+  foreach my $tag ( @tags ) {
+    $db->resultset('BookTag')->find_or_create({
+      book => $book->id ,
+      tag  => $tag->id  ,
+    });
+  }
+
+  return $book;
+}
+
 my $db;
 sub db_handle {
   my( $class ) = ( @_ );
@@ -110,6 +157,15 @@ Booklist - Convenience functions for the 'booklist' application.
 You don't use this directly. 
 
 =head1 INTERFACE
+
+=head2 add_book
+
+    my $book = Booklist->add_book( $opt );
+
+Returns a Booklist::DB::Book object corresponding to the newly created book.
+
+Needs to be passed the second ($opt) arg passed to App::Cmd 'run()' functions, where ever that comes from. 
+
 
 =head2 db_handle
 
