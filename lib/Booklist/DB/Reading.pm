@@ -48,7 +48,12 @@ sub calc_reading_duration {
 
 sub start_as_ymd {
   my( $self ) = @_;
-  return DateTime->from_epoch( epoch => $self->startdate() )->ymd;
+  if ( $self->startdate ) {
+    return DateTime->from_epoch( epoch => $self->startdate() )->ymd;
+  }
+  else {
+    return 'unstarted';
+  }
 }
 
 1; # Magic true value required at end of module
