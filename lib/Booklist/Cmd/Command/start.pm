@@ -21,6 +21,7 @@ sub opt_spec {
     [ ] ,
     [ 'startdate|start|d=s' , 'date started reading (optional; defaults to today)'                ] ,
     [ 'tag|T=s@'            , 'tags/categories to apply to this book (optional, can be multiple)' ] ,
+    [ 'id|i=s'              , 'id of a previously added book that you want to start reading'      ] ,
   );
 }
 
@@ -37,6 +38,8 @@ sub validate_args {
     $self->usage_error( $@ ) if ( $@ );
   }
 
+  return if ( $opt->{id} );
+  
   foreach my $var ( qw/ title author pages / ) {
     $self->usage_error( "$var is a required option" )
       unless $opt->{$var};
@@ -50,73 +53,47 @@ sub run {
 
   my $db = Booklist->db_handle();
 
-  my @authors;
-  foreach my $author ( @{ $opt->{author} } ) {
-    foreach my $a ( split /\s*,\s*/ , $author ) {
-      push @authors ,
-        $db->resultset('Author')->find_or_create({ author => $a });
-    }
-  }
-
-  my @tags;
-  foreach my $tag ( @{ $opt->{tag} } ) {
-    foreach my $t ( split /\s*,\s*/ , $tag ) {
-      push @tags , $db->resultset('Tag')->find_or_create({ tag => $t });
-    }
-  }
-  
-  my $book = $db->resultset('Book')->find_or_create({
-    title  => $opt->{title} ,
-    pages  => $opt->{pages} ,
-  });
-
-  foreach my $author ( @authors ) {
-    $db->resultset('AuthorBook')->find_or_create({
-      author => $author->id ,
-      book   => $book->id   ,
-    });
-  }
-
-  foreach my $tag ( @tags ) {
-    $db->resultset('BookTag')->find_or_create({
-      book => $book->id ,
-      tag  => $tag->id  ,
-    });
-  }
-  
-  my $startdate;
-  if ( $opt->{startdate} ) {
-    $startdate = $opt->{startdate};
+  my $book;
+  if ( $opt->{id} ) {
+    $book = $db->resultset('Book')->find( $opt->{id} );
   }
   else {
-    $startdate = time();
+    $book = Booklist->add_book( $opt );
   }
 
+  my $id    = $book->id;
+  my $title = $book->title;
+  
   my $reading_count = $db->resultset('Reading')->find({
     book       => $book->id ,
     finishdate => undef ,
   });
   
-  my $title = $book->title;
-
+  my $startdate = $opt->{startdate} || time();
+  
   if ( $reading_count ) {
-    my $start = $reading_count->start_as_ymd();
-    
-    print STDERR <<EOL;
+    if ( $reading_count->startdate ) {
+      my $start = $reading_count->start_as_ymd();
+      print STDERR <<EOL;
 You seem to already be reading that book
 You started it on $start and have not yet recorded a finish date
-Use 'booklist finish --title "$title"' to finish this reading.
+Use 'booklist finish --id "$id"' to finish this reading.
 EOL
   
-    exit(1);
-    
+      exit(1);
+    }
+    else {
+      $reading_count->startdate( $startdate );
+      $reading_count->update();
+    }
   }
-  
-  my $reading = $db->resultset('Reading')->create( {
-    book       => $book->id  ,
-    startdate  => $startdate ,
-    finishdate => undef      ,
-  } );
+  else {
+    my $reading = $db->resultset('Reading')->create( {
+      book       => $book->id  ,
+      startdate  => $startdate ,
+      finishdate => undef      ,
+    } );
+  }
 
   print "Started to read '$title'\n";
 }
@@ -132,8 +109,17 @@ Booklist::Cmd::Command::start - start reading a book
 
 =head1 SYNOPSIS
 
-    booklist start --title $TITLE --author $AUTHOR --pages $PAGES [ --date $YYYYMMDD ]
-    booklist start -t $TITLE -a $AUTHOR -p $PAGES [ -d $YYYYMMDD ]
+    booklist start --title $TITLE --author $AUTHOR --pages $PAGES [ --date $YYYYMMDD ] [ --tag $TAG ]
+    booklist start -t $TITLE -a $AUTHOR -p $PAGES [ -d $YYYYMMDD ] [ -T $TAG ]
+
+Multiple authors and tags can either be given as multiple arguments (e.g., C<< -a $AUTHOR1 -a $AUTHOR2 >>) or as comma-delimited (e.g., C<< -T $TAG1,$TAG2 >>)
+
+    booklist start --id $ID
+    booklist start -i $ID
+
+Use this form when you want to start reading a book you've previously added to the database via 'add' 
+
+    
 
 =head1 BUGS AND LIMITATIONS
 
