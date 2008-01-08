@@ -19,6 +19,7 @@ sub opt_spec {
   (
     [ 'all|a' , 'list all books in database' ] ,
     [ 'read|r' , 'list all read books in database' ] ,
+    [ 'notstarted|n' , 'list all unstarted books in database' ] ,
     [ 'unfinished|u' , 'list all unread books in database (default if nothing else specified)' ],
   );
 }
@@ -29,9 +30,10 @@ sub validate_args {
   # no args allowed but options!
   $self->usage_error("No args allowed") if @$args;
 
-  if(     $opt->{all}  ) { $opt->{LIST} = 'all'  }
-  elsif ( $opt->{read} ) { $opt->{LIST} = 'read' }
-  else                   { $opt->{LIST} = 'unfinished' }
+  if(     $opt->{all}        ) { $opt->{LIST} = 'all'        }
+  elsif ( $opt->{read}       ) { $opt->{LIST} = 'read'       }
+  elsif ( $opt->{notstarted} ) { $opt->{LIST} = 'notstarted' }
+  else                         { $opt->{LIST} = 'unfinished' }
 }
 
 
@@ -50,6 +52,9 @@ sub run {
       finishdate => { '!=' , 'NULL' } ,
     };
   }
+  elsif ( $opt->{LIST} eq 'notstarted' ) {
+    $search = { startdate => undef };
+  }
   else {
    $search = {
       startdate  => { '!=' , 'NULL' } ,
@@ -57,20 +62,18 @@ sub run {
     };
   }
 
-  my $readings = $db->resultset('Reading')->search( $search , { order_by => 'startdate' });
+  my $readings = $db->resultset('Reading')->search( $search , { order_by => 'id' });
 
-  exit unless $readings->count;
-    
-  my $count = 1;
   while ( my $reading = $readings->next) {
-    my $book    = sprintf "%3d:\n%s" , $count , $reading->book->title;
+    my $book    = sprintf "%3d: %s" ,
+      $reading->id , $reading->book->title;
     my $names   = join ' & ' , map { $_->author } $reading->book->authors;
     my $tags    = join ', ' , map { $_->tag } $reading->book->tags;
     
-    my $time    = sprintf "  STARTED: %d" , Booklist->epoch2ymd( $reading->startdate );
+    my $time    = sprintf "  STARTED: %s" , $reading->start_as_ymd ;
     if ( $reading->finishdate ) {
       my $duration = $reading->calc_reading_duration();
-      $time = sprintf "%s    FINISHED: %d   ($duration)" ,
+      $time = sprintf "%s    FINISHED: %s   ($duration)" ,
         $time , Booklist->epoch2ymd( $reading->finishdate );
     }
 
@@ -80,13 +83,7 @@ CATEGORIES: $tags
 $time
 
 EOL
-  
-    $count++;
   }
-  
-  exit;
-
-  
 }
 
 
