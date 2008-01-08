@@ -30,20 +30,16 @@ sub run {
 
   my $db = Booklist->db_handle();
 
-  my $authors = $db->resultset('Author')->search( undef , { order_by => 'author' });
+  my $authors = $db->resultset('Author')->search( undef , { order_by => 'id' });
 
   printf "%3s  %3s  %s\n" , '###' , '#bk' , 'author';
   
-  my $count = 1;
   while ( my $author = $authors->next ) {
+    my $id    = $author->id;
     my $name  = $author->author;
     my $books = $author->books->count;
-    printf "%3d  %3d  %s\n" , $count , $books , $name;
-    $count++
+    printf "%3d  %3d  %s\n" , $id , $books , $name;
   }
-  
-  exit;
-  
 }
 
 
