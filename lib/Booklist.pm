@@ -150,7 +150,7 @@ __END__
 
 =head1 NAME
 
-Booklist - Convenience functions for the 'booklist' application. 
+Booklist - Track books you want to read, are reading, and have read
 
 =head1 SYNOPSIS
 
