@@ -12,7 +12,7 @@ __PACKAGE__->load_components( qw/ PK::Auto Core / );
 
 __PACKAGE__->table( 'books' );
 
-__PACKAGE__->add_columns( qw/ id pages title / );
+__PACKAGE__->add_columns( qw/ id pages title added / );
 
 __PACKAGE__->set_primary_key( 'id' );
 
@@ -22,6 +22,12 @@ __PACKAGE__->has_many( readings     => 'Booklist::DB::Reading' );
 
 __PACKAGE__->many_to_many( authors => 'authorsbooks' , 'author' );
 __PACKAGE__->many_to_many( tags    => 'bookstags'    , 'tag'    );
+
+
+sub added_as_ymd {
+  my( $self ) = @_;
+  return DateTime->from_epoch( epoch => $self->added() )->ymd;
+}
 
 1; # Magic true value required at end of module
 
@@ -37,6 +43,16 @@ Booklist::DB::Book - DBIC table class for the 'book' table.
 =head1 SYNOPSIS
 
 Autoloaded by DBIC framework. 
+
+=head1 INTERFACE
+
+=head2 added_as_ymd
+
+    my $ymd_date = $reading->start_as_ymd();
+
+Returns the time the book was added as a YMD-formatted date.
+
+
 
 =head1 BUGS AND LIMITATIONS
 
