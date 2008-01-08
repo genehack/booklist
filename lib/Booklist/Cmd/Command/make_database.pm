@@ -76,8 +76,9 @@ CREATE TABLE authors (
 
 CREATE TABLE books (
   id       INTEGER PRIMARY KEY,
+  added    INTEGER ,
   pages    INTEGER ,
-  title    TEXT 
+  title    TEXT   
 );
 
 CREATE TABLE authors_books (
