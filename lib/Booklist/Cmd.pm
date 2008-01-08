@@ -1,5 +1,8 @@
 package Booklist::Cmd;
 
+# $Id$
+# $URL$
+
 use strict;
 use warnings;
 
