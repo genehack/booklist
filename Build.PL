@@ -21,7 +21,6 @@ my $builder = Module::Build->new(
       'Test::Exception'     => 0 ,
       'Test::File'          => 0 ,
       'Test::More'          => 0 ,
-      'Test::Output'        => 0 ,
       'Test::Trap'          => 0 ,
       'version'             => 0 ,
     },
