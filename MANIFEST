@@ -27,7 +27,7 @@ t/31.start_validate.t
 t/32.start_startdate.t
 t/33.start_tags.t
 t/34.start_tags2.t
-t/35.start_authors2.t
+t/35.start_authors.t
 t/36.start_authors2.t
 t/37.start_id.t
 t/40.add.t
@@ -40,9 +40,9 @@ t/61.finish-validate.t
 t/62.finish_finishdate.t
 t/70.list.t
 t/71.list-validate.t
+t/80.stats.t
 t/99.clean_up.t
 t/db.pm
 t/perlcritic.t
 t/pod-coverage.t
 t/pod.t
-
