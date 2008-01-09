@@ -105,6 +105,8 @@ sub db_location {
 sub epoch2ymd {
   my( $class , $date ) = @_;
 
+  $date = time() unless defined $date;
+  
   my $t;
   eval {
     $t = DateTime->from_epoch( epoch => $date )->ymd;
@@ -183,8 +185,9 @@ database.
 =head2 epoch2ymd
 
     my $ymd = Booklist->epoch2ymd( $epoch_time_value );
+    my $current_ymd = Booklist->epoch2ymd();
 
-Converts epoch time into a 'YYYYMMDD' string
+Converts epoch time into a 'YYYYMMDD' string. Uses current time if one isn't given.
 
 =head2 ymd2epoch
 
