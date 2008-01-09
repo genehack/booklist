@@ -43,7 +43,6 @@ sub run {
   my $book  = Booklist->add_book( $opt );
   my $title = $book->title;
 
-  
   my $db = Booklist->db_handle();
   
   my $reading_count = $db->resultset('Reading')->find({
@@ -72,7 +71,6 @@ EOL
     }
     
     print STDERR $msg;
-    
     exit(1);
     
   }

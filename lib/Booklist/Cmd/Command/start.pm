@@ -79,7 +79,6 @@ You seem to already be reading that book
 You started it on $start and have not yet recorded a finish date
 Use 'booklist finish --id "$id"' to finish this reading.
 EOL
-  
       exit(1);
     }
     else {
@@ -94,7 +93,6 @@ EOL
       finishdate => undef      ,
     } );
   }
-
   print "Started to read '$title'\n";
 }
 

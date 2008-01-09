@@ -17,8 +17,8 @@ sub usage_desc { "%c list %o" }
 
 sub opt_spec {
   (
-    [ 'all|a' , 'list all books in database' ] ,
-    [ 'read|r' , 'list all read books in database' ] ,
+    [ 'all|a'        , 'list all books in database' ] ,
+    [ 'read|r'       , 'list all read books in database' ] ,
     [ 'notstarted|n' , 'list all unstarted books in database' ] ,
     [ 'unfinished|u' , 'list all unread books in database (default if nothing else specified)' ],
   );
