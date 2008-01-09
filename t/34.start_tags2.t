@@ -2,10 +2,8 @@
 # $Id$
 # $URL$
 
-use Test::More     qw/ no_plan /;
-use Test::Output   qw/ stdout_from /;
-use Test::Trap     qw/ trap $trap /;
-
+use Test::More    qw/ no_plan /;
+use Test::Trap    qw/ trap $trap /;
 
 use Booklist::Cmd;
 
@@ -18,46 +16,66 @@ my $pages   = 278;
 my $start   = '2007-01-14';
 my @tags    = qw/ fantasy puns /;
 
-my @args = ( 'start' ,
-             '--title'     => $title  ,
-             '--pages'     => $pages  ,
-             '--startdate' => $start  ,
-           );
+my @args = (
+  'start' ,
+  '--title'     => $title  ,
+  '--pages'     => $pages  ,
+  '--startdate' => $start  ,
+);
 push @args , ( '--author' => $_ ) foreach( @authors );
 push @args , ( '--tag' => $_ ) foreach ( @tags );
 
-my $error;
-my $stdout = do {
-  local @ARGV = ( @args );
-  stdout_from( sub {
-    eval { Booklist::Cmd->run ; 1 } or $error = $@;
-  } );
-};
-
-like $stdout , qr/Started to read '$title'/;
-ok ! $error;
-
-my @r = trap {
+trap {
   local @ARGV = ( @args );
   Booklist::Cmd->run;
 };
 
-is( $trap->exit , 1 ,
-    'should exit with status 1 when trying to start book already being read' );
+$trap->leaveby(
+  'return' ,
+  'return without error'
+);
 
-is( $trap->stdout , '' ,
-    'and should not send anything to STDOUT when doing so' );
+$trap->stdout_like(
+  qr/Started to read '$title'/ ,
+  'say what you did'
+);
 
-like( $trap->stderr , qr/^You seem to already be reading that book/ ,
-      'stderr should have error text however' );
+$trap->stderr_nok(
+  'nothing on stderr'
+);
 
-like( $trap->stderr ,
-      qr/You started it on $start and have not yet recorded a finish date/ ,
-      'stderr should also have the start date' );
+trap {
+  local @ARGV = ( @args );
+  Booklist::Cmd->run;
+};
 
+$trap->leaveby(
+  'exit' ,
+  'exit on error'
+);
 
-my $db   = Booklist->db_handle;
-my $book = $db->resultset('Book')->find({title => $title });
+$trap->exit_is(
+  1 ,
+  'should exit with status 1 when trying to start book already being read' 
+);
+
+$trap->stdout_nok(
+  'and should not send anything to STDOUT when doing so' 
+);
+
+$trap->stderr_like(
+  qr/^You seem to already be reading that book/ ,
+  'stderr should have error text however' 
+);
+
+$trap->stderr_like(
+  qr/You started it on $start and have not yet recorded a finish date/ ,
+  'stderr should also have the start date' 
+);
+
+my $book = Booklist->db_handle->resultset('Book')->find( {
+  title => $title
+} );
 
 my @bookauthors;
 foreach ( $book->authors ) {

@@ -2,21 +2,21 @@
 # $Id$
 # $URL$
 
-use Test::More        qw/ no_plan /;
-use Test::Output      qw/ stdout_from /;
+use Test::More   qw/ no_plan    /;
+use Test::Trap   qw/ trap $trap /;
 
 use Booklist::Cmd;
 
 use lib './t';
 require 'db.pm';
 
-my $error;
-my $stdout = do {
+trap {
   local @ARGV = ( 'make_database' , 'foo' );
-  stdout_from( sub {
-    eval { Booklist::Cmd->run ; 1 } or $error = $@;
-  } );
+  Booklist::Cmd->run;
 };
 
-like $error , qr/No args allowed/ ,
-  'arguments are not allowed';
+$trap->leaveby_is( 'die' ,
+  'die on excess args' );
+
+$trap->die_like( qr/No args allowed/ ,
+  'arguments are not allowed' );

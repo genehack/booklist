@@ -2,9 +2,8 @@
 # $Id$
 # $URL$
 
-use Test::More     qw/ no_plan /;
-use Test::Output   qw/ stdout_from /;
-use Test::Trap     qw/ trap $trap /;
+use Test::More    qw/ no_plan /;
+use Test::Trap    qw/ trap $trap /;
 
 use Booklist;
 use Booklist::Cmd;
@@ -12,62 +11,86 @@ use Booklist::Cmd;
 use lib './t';
 require 'db.pm';
 
-my $today  = Booklist->epoch2ymd( time() );
+my $today  = Booklist->epoch2ymd();
 
 my $title  = 'The Last Colony';
 my $author = 'John Scalzi';
 my $pages  = 320;
 
-my @args = ( 'add' ,
-             '--title'  => $title  ,
-             '--author' => $author ,
-             '--pages'  => $pages  ,
-           );   
+my @args = (
+  'add' ,
+  '--title'  => $title  ,
+  '--author' => $author ,
+  '--pages'  => $pages  ,
+);   
 
-my $error;
-my $stdout = do {
+trap {
   local @ARGV = ( @args );
-  stdout_from( sub {
-    eval { Booklist::Cmd->run ; 1 } or $error = $@;
-  } );
+  Booklist::Cmd->run;
 };
 
-like $stdout , qr/Added '$title' to read later/;
-ok ! $error;
+$trap->leaveby(
+  'return' ,
+  'return on non-error'
+);
+
+$trap->stdout_like (
+  qr/Added '$title' to read later/ ,
+  'got expected stdout'
+);
+
+$trap->stderr_nok(
+  'got nothing on stderr'
+);
 
 $args[0] = 'start';
 
-$stdout = do {
-  local @ARGV = ( @args );
-  stdout_from( sub {
-    eval { Booklist::Cmd->run ; 1 } or $error = $@;
-  } );
-};
-
-like $stdout , qr/Started to read '$title'/;
-ok ! $error;
-
-my @r = trap {
+trap {
   local @ARGV = ( @args );
   Booklist::Cmd->run;
 };
+
+$trap->leaveby(
+  'return' ,
+  'return on non-error'
+);
+
+$trap->stdout_like (
+  qr/Started to read '$title'/ ,
+  'got expected stdout'
+);
+
+$trap->stderr_nok(
+  'got nothing on stderr'
+);
 
 $args[0] = 'add';
 
-@r = trap {
+trap {
   local @ARGV = ( @args );
   Booklist::Cmd->run;
 };
 
-is( $trap->exit , 1 ,
-    'should exit with status 1 when trying to add book already being read' );
+$trap->leaveby(
+  'exit' ,
+  'exit on error'
+);
 
-is( $trap->stdout , '' ,
-    'and should not send anything to STDOUT when doing so' );
+$trap->exit_is(
+  1 ,
+  'should exit with status 1 when trying to add book already being read'
+);
 
-like( $trap->stderr , qr/^You seem to already be reading that book/ ,
-      'stderr should have error text however' );
+$trap->stdout_nok(
+  'and should not send anything to STDOUT when doing so'
+);
 
-like( $trap->stderr ,
-      qr/You started it on $today and have not yet recorded a finish date/ ,
-      'stderr should also have the start date' );
+$trap->stderr_like(
+  qr/^You seem to already be reading that book/ ,
+  'stderr should have error text however'
+);
+
+$trap->stderr_like(
+  qr/You started it on $today and have not yet recorded a finish date/ ,
+  'stderr should also have the start date'
+);

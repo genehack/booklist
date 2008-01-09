@@ -2,9 +2,10 @@
 # $Id$
 # $URL$
 
-use Test::More        qw/ no_plan /;
+use Test::More    qw/ no_plan    /;
+use Test::Trap    qw/ trap $trap /;
+
 use Test::File;
-use Test::Trap        qw/ trap $trap /;
 
 use Booklist;
 use Booklist::Cmd;
@@ -19,7 +20,7 @@ is( Booklist->db_location , $test_db_name ,
 
 trap { Booklist->db_handle() };
 
-is( $trap->leaveby , 'die' ,
+$trap->leaveby_is( 'die' ,
   'db_handle dies when database file not there' );
 
 $trap->die_like(  qr/Database file '$test_db_name' doesn't exist/ ,
@@ -47,9 +48,9 @@ trap {
   Booklist::Cmd->run;
 };
 
-is( $trap->leaveby , 'die' ,
+$trap->leaveby_is( 'exit' ,
   'make_database refuses to overwrite existing DB' );
 
-$trap->die_like( qr/Won't replace existing database without --force/ ,
+$trap->stderr_like( qr/Won't replace existing database without --force/ ,
   'make_database says why it dies' );
 

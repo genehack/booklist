@@ -2,9 +2,8 @@
 # $Id$
 # $URL$
 
-use Test::More     qw/ no_plan /;
-use Test::Output   qw/ stdout_from /;
-use Test::Trap     qw/ trap $trap /;
+use Test::More    qw/ no_plan /;
+use Test::Trap    qw/ trap $trap /;
 
 use Booklist;
 use Booklist::Cmd;
@@ -16,40 +15,61 @@ my $title  = 'Halting State';
 my $author = 'Charles Stross';
 my $pages  = 351;
 
-my $today  = Booklist->epoch2ymd( time() );
+my $today  = Booklist->epoch2ymd();
 
-my @args = ( 'add' ,
-             '--title'  => $title  ,
-             '--author' => $author ,
-             '--pages'  => $pages  ,
-           );   
+my @args = (
+  'add' ,
+  '--title'  => $title  ,
+  '--author' => $author ,
+  '--pages'  => $pages  ,
+);   
 
-my $error;
-my $stdout = do {
+trap {
   local @ARGV = ( @args );
-  stdout_from( sub {
-    eval { Booklist::Cmd->run ; 1 } or $error = $@;
-  } );
+  Booklist::Cmd->run;
 };
 
-like $stdout , qr/Added '$title' to read later/;
-ok ! $error;
+$trap->leaveby_is(
+  'return' ,
+  'return on non-error'
+);
 
-my $db   = Booklist->db_handle;
-my $book = $db->resultset('Book')->find({title => $title });
-my $id   = $book->id;
+$trap->stdout_like(
+  qr/Added '$title' to read later/ ,
+  'with expected output'
+);
+  
+$trap->stderr_nok(
+  'and nothing on stderr'
+);
 
+my $id = Booklist->db_handle->resultset('Book')->find( {
+  title => $title
+} )->id;
 
-@args = ( 'start' ,
-          '--id' => $id ,
-        );
-$stdout = do {
+@args = (
+  'start' ,
+  '--id' => $id ,
+);
+
+trap {
   local @ARGV = ( @args );
-  stdout_from( sub {
-    eval { Booklist::Cmd->run ; 1 } or $error = $@;
-  } );
+  Booklist::Cmd->run;
 };
 
-like $stdout , qr/Started to read '$title'/;
-ok ! $error;
+$trap->leaveby(
+  'return' ,
+  'return on non-error'
+);
+
+  
+$trap->stdout_like(
+  qr/Started to read '$title'/ ,
+  'with expected output'
+);
+
+$trap->stderr_nok(
+  'and nothing on stderr'
+);
+
 

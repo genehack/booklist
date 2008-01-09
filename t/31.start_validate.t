@@ -2,9 +2,8 @@
 # $Id$
 # $URL$
 
-use Test::More     qw/ no_plan /;
-use Test::Output   qw/ stdout_from /;
-use Test::Trap     qw/ trap $trap /;
+use Test::More    qw/ no_plan /;
+use Test::Trap    qw/ trap $trap /;
 
 use Booklist;
 use Booklist::Cmd;
@@ -16,60 +15,58 @@ my $title  = 'CSS Cookbook';
 my $author = 'Christopher Schmitt';
 my $pages  = 252;
 
-my $today  = Booklist->epoch2ymd( time() );
+my $today  = Booklist->epoch2ymd();
 
-my @args = ( 'start' );   
-
-my $error;
-my $stdout = do {
-  local @ARGV = ( @args );
-  stdout_from( sub {
-    eval { Booklist::Cmd->run ; 1 } or $error = $@;
-  } );
+trap {
+  local @ARGV = ( 'start' );
+  Booklist::Cmd->run;
 };
 
-like $error , qr/title is a required option/ ,
-  'you needs a title';
+$trap->leaveby_is( 'die' ,
+  'die on bad args' );
 
-@args = ( @args ,
-          '--title' => $title ,
-        );
+$trap->die_like( qr/title is a required option/ ,
+  'you needs a title' );
 
-$stdout = do {
+my @args = (
+  'start'             ,
+  '--title' => $title ,
+);
+
+trap {
   local @ARGV = ( @args );
-  stdout_from( sub {
-    eval { Booklist::Cmd->run ; 1 } or $error = $@;
-  } );
+  Booklist::Cmd->run;
 };
 
-like $error , qr/author is a required option/ ,
-  'you needs an author too';
+$trap->leaveby_is( 'die' ,
+  'die on bad args' );
 
-@args = ( @args ,
-          '--author' => $author ,
-        );
+$trap->die_like( qr/author is a required option/ ,
+  'you needs an author too' );
 
-$stdout = do {
+push @args , ( '--author' => $author );
+
+trap {
   local @ARGV = ( @args );
-  stdout_from( sub {
-    eval { Booklist::Cmd->run ; 1 } or $error = $@;
-  } );
+  Booklist::Cmd->run;
 };
 
-like $error , qr/pages is a required option/ ,
-  'and you has to track pages yo';
+$trap->leaveby_is( 'die' ,
+  'die on bad args' );
 
-@args = ( @args ,
-          'argument' 
-        );
+$trap->die_like( qr/pages is a required option/ ,
+  'and you has to track pages yo' );
 
-$stdout = do {
+push @args , 'argument';
+
+trap {
   local @ARGV = ( @args );
-  stdout_from( sub {
-    eval { Booklist::Cmd->run ; 1 } or $error = $@;
-  } );
+  Booklist::Cmd->run;
 };
 
-like $error , qr/No args allowed/ ,
-  'but arguments are not allowed';
+$trap->leaveby_is( 'die' ,
+  'die on bad args' );
+
+$trap->die_like( qr/No args allowed/ ,
+  'but arguments are not allowed' );
 

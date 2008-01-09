@@ -2,8 +2,8 @@
 # $Id$
 # $URL$
 
-use Test::More        qw/ no_plan    /;
-use Test::Trap        qw/ trap $trap /;
+use Test::More    qw/ no_plan    /;
+use Test::Trap    qw/ trap $trap /;
 
 use Booklist;
 use Booklist::Cmd;
