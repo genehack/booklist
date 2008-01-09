@@ -39,17 +39,23 @@ sub run {
   if ( -e $db_file ) {
     if ( $opt->{force} ) {
       unlink $db_file;
-      die "Problem removing existing database"
-        if -e $db_file;
+      if ( -e $db_file ) {
+        print STDERR "Problem removing existing database\n";
+        exit(1);
+      }
     }
     else {
-      die "Won't replace existing database without --force\n";
+      print STDERR "Won't replace existing database without --force\n";
+      exit(1);
     }
   }
   
   my $sqlite = searchpath( 'sqlite3' , $ENV{PATH} );
-  die q|Can't find 'sqlite3' in your $PATH|
-    unless $sqlite;
+  unless ( $sqlite ) {
+    print STDERR q|Can't find 'sqlite3' in your $PATH|,"\n";
+    exit(1);
+  }
+
     
   open( my $SQLITE , '|-' , "$sqlite $db_file" );
   while ( <DATA> ) {
