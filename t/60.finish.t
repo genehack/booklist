@@ -2,9 +2,8 @@
 # $Id$
 # $URL$
 
-use Test::More     qw/ no_plan /;
-use Test::Output   qw/ stdout_from /;
-use Test::Trap     qw/ trap $trap /;
+use Test::More    qw/ no_plan /;
+use Test::Trap    qw/ trap $trap /;
 
 use Booklist;
 use Booklist::Cmd;
@@ -12,31 +11,44 @@ use Booklist::Cmd;
 use lib './t';
 require 'db.pm';
 
-my $db = Booklist->db_handle;
-
 my $title  = 'The Sleeping Dragon';
-my $book   = $db->resultset('Book')->find({ title => $title });
-my $id     = $book->id;
+my $id     = Booklist->db_handle->resultset('Book')->find( { 
+  title => $title
+} )->id;
 
-my @args = ( 'start' ,
-             '--id'  => $id  ,
-           );   
+my @args = (
+  'start' ,
+  '--id'  => $id  ,
+);   
 
-my $error;
-my $stdout = do {
+trap {
   local @ARGV = ( @args );
-  stdout_from( sub {
-    eval { Booklist::Cmd->run ; 1 } or $error = $@;
-  } );
+  Booklist::Cmd->run;
 };
+
+$trap->leaveby(
+  'return' ,
+  'just checking things still work as expected'
+);
 
 $args[0] = 'finish';
-$stdout = do {
+
+trap {
   local @ARGV = ( @args );
-  stdout_from( sub {
-    eval { Booklist::Cmd->run ; 1 } or $error = $@;
-  } );
+  Booklist::Cmd->run;
 };
 
-like $stdout , qr/Finished reading '$title'/;
-ok ! $error;
+
+$trap->leaveby(
+  'return' ,
+  'return on non-error' 
+);
+
+$trap->stdout_like(
+  qr/Finished reading '$title'/ ,
+  'expected stdout'
+);
+
+$trap->stderr_nok(
+  'and nothing on stderr'
+);

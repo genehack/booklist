@@ -2,9 +2,8 @@
 # $Id$
 # $URL$
 
-use Test::More     qw/ no_plan /;
-use Test::Output   qw/ stdout_from /;
-use Test::Trap     qw/ trap $trap /;
+use Test::More    qw/ no_plan /;
+use Test::Trap    qw/ trap $trap /;
 
 use Booklist;
 use Booklist::Cmd;
@@ -14,85 +13,109 @@ require 'db.pm';
 
 my @args = ( 'list' );   
 
-my $error;
-my $stdout = do {
+trap {
   local @ARGV = ( @args );
-  stdout_from( sub {
-    eval { Booklist::Cmd->run ; 1 } or $error = $@;
-  } );
+  Booklist::Cmd->run;
 };
 
-like $stdout , qr/1: Orbital Resonance by John Barnes/ ,
-  'list unread';
-ok ! $error;
+$trap->leaveby(
+  'return' ,
+  'return on normal'
+);
 
-my $old_stdout = $stdout;
+$trap->stdout_like(
+  qr/1: Orbital Resonance by John Barnes/ ,
+  'list unread'
+);
 
-@args = ( @args , '--unfinished' );
+$trap->stderr_nok(
+  'stderr silent'
+);
 
-$stdout = do {
+my $old_stdout = $trap->stdout;
+
+push @args , '--unfinished';
+
+trap {
   local @ARGV = ( @args );
-  stdout_from( sub {
-    eval { Booklist::Cmd->run ; 1 } or $error = $@;
-  } );
+  Booklist::Cmd->run;
 };
 
-is( $stdout , $old_stdout ,
-  '--unfinished and default output are the same' );
+is( $trap->stdout , $old_stdout ,
+    '--unfinished and default output are the same' );
 
-@args = ('list','--read');
-
-$stdout = do {
-  local @ARGV = ( @args );
-  stdout_from( sub {
-    eval { Booklist::Cmd->run ; 1 } or $error = $@;
-  } );
+trap {
+  local @ARGV = ( 'list' , '--read' );
+  Booklist::Cmd->run;
 };
 
-like $stdout , qr/2: Thud by Terry Pratchett/ ,
-  'list read';
-ok ! $error;
+$trap->leaveby(
+  'return' ,
+  'return on non-error'
+);
+
+$trap->stdout_like(
+  qr/2: Thud by Terry Pratchett/ ,
+  'list read'
+);
+
+$trap->stderr_nok(
+  'stderr silent'
+);
 
 my $title  = 'Otherness';
 my $author = 'David Brin';
 my $pages  = 357;
 
-@args = ( 'add' ,
-             '--title'  => $title  ,
-             '--author' => $author ,
-             '--pages'  => $pages  ,
-           );
-$stdout = do {
+@args = (
+  'add'                 ,
+  '--title'  => $title  ,
+  '--author' => $author ,
+  '--pages'  => $pages  ,
+);
+
+trap {
   local @ARGV = ( @args );
-  stdout_from( sub {
-    eval { Booklist::Cmd->run ; 1 } or $error = $@;
-  } );
+  Booklist::Cmd->run;
 };
 
-@args = ('list','--notstarted');
-
-$stdout = do {
-  local @ARGV = ( @args );
-  stdout_from( sub {
-    eval { Booklist::Cmd->run ; 1 } or $error = $@;
-  } );
+trap {
+  local @ARGV = ( 'list' , '--notstarted' );
+  Booklist::Cmd->run;
 };
 
-like $stdout , qr/$title by $author/ ,
-  'list notstarted';
-ok ! $error;
+$trap->leaveby(
+  'return' ,
+  'return on non-err'
+);
 
+$trap->stdout_like(
+  qr/$title by $author/ ,
+  'list notstarted'
+);
+  
 
-@args = ('list','--all');
+$trap->stderr_nok(
+  'stderr silent'
+);
 
-$stdout = do {
-  local @ARGV = ( @args );
-  stdout_from( sub {
-    eval { Booklist::Cmd->run ; 1 } or $error = $@;
-  } );
+trap {
+  local @ARGV = ('list','--all');
+  Booklist::Cmd->run;
 };
 
-like $stdout , qr/$title by $author/ ,
-  'list notstarted';
-ok ! $error;
+$trap->leaveby(
+  'return' ,
+  'return on non-err'
+);
+
+$trap->stdout_like(
+  qr/$title by $author/ ,
+  'list notstarted'
+);
+
+$trap->stderr_nok(
+  'stderr silent'
+);
+
 

@@ -2,9 +2,8 @@
 # $Id$
 # $URL$
 
-use Test::More     qw/ no_plan /;
-use Test::Output   qw/ stdout_from /;
-use Test::Trap     qw/ trap $trap /;
+use Test::More    qw/ no_plan /;
+use Test::Trap    qw/ trap $trap /;
 
 use Booklist;
 use Booklist::Cmd;
@@ -12,73 +11,99 @@ use Booklist::Cmd;
 use lib './t';
 require 'db.pm';
 
-my $db = Booklist->db_handle;
-
-my $title  = 'The Sleeping Dragon';
-my $book   = $db->resultset('Book')->find({ title => $title });
-my $id     = $book->id;
+my $id = Booklist->db_handle->resultset('Book')->find( { 
+  title => 'The Sleeping Dragon'
+} )->id;
 
 my @args = ('finish');
 
-my $error;
-my $stdout = do {
-  local @ARGV = ( @args );
-  stdout_from( sub {
-    eval { Booklist::Cmd->run ; 1 } or $error = $@;
-  } );
-};
-
-like( $error , qr/Must give '--id' argument/ ,
-        'must give --id argument' );
-
-@args = ( @args , 'foo' );
-
-$stdout = do {
-  local @ARGV = ( @args );
-  stdout_from( sub {
-    eval { Booklist::Cmd->run ; 1 } or $error = $@;
-  } );
-};
-
-like( $error , qr/No args allowed/ ,
-        'thou shalt have no other args before me' );
-
-
-@args = ( 'finish' ,
-          '--id' => $id
-        );
-
-my @r = trap {
+trap {
   local @ARGV = ( @args );
   Booklist::Cmd->run;
 };
 
-is( $trap->exit , 1 ,
-    'should exit with status 1 when trying to finish a book not being read' );
+$trap->leaveby( 
+  'die' ,
+  'die on bad args'
+);
 
-is( $trap->stdout , '' ,
-    'and should not send anything to STDOUT when doing so' );
+$trap->die_like ( 
+  qr/Must give '--id' argument/ ,
+  'must give --id argument'
+);
 
-like( $trap->stderr ,
-      qr/You don't seem to be currently reading a book with that title/ ,
-        'not reading that' );
+push @args , 'foo';
 
+trap {
+  local @ARGV = ( @args );
+  Booklist::Cmd->run;
+};
+
+
+$trap->leaveby( 
+  'die' ,
+  'die on bad args'
+);
+
+$trap->die_like ( 
+  qr/No args allowed/ ,
+  'thou shalt have no other args before me' 
+);
+
+
+@args = (
+  'finish'      ,
+  '--id' => $id ,
+);
+
+trap {
+  local @ARGV = ( @args );
+  Booklist::Cmd->run;
+};
+
+$trap->leaveby_is( 
+  'exit' ,
+  'should exit when trying to finish a book not being read'
+);
+
+$trap->exit_is (
+  1 ,
+  'should exit with status 1 when trying to finish a book not being read' 
+);
+
+$trap->stdout_nok(
+  'and should not send anything to STDOUT when doing so' 
+);
+
+$trap->stderr_like(
+  qr/You don't seem to be currently reading a book with that title/ ,
+  'not reading that' 
+);
 
 $args[-1] = 9999;
 
-@r = trap {
+trap {
   local @ARGV = ( @args );
   Booklist::Cmd->run;
 };
 
-is( $trap->exit , 1 ,
-    'should exit with status 1 when trying to finish a book that does not exist' );
 
-is( $trap->stdout , '' ,
-    'and should not send anything to STDOUT when doing so' );
+$trap->leaveby_is( 
+  'exit' ,
+  'should exit when trying to finish a book that does not exist'
+);
 
-like( $trap->stderr ,
-      qr/Hmm. I can't seem to find a book with that ID.../ ,
-        'not reading that' );
+$trap->exit_is (
+  1 ,
+  'should exit with status 1 when trying to finish a book that does not exist' 
+);
 
+$trap->stdout_nok(
+  'and should not send anything to STDOUT when doing so' 
+);
+
+$trap->stderr_like(
+  qr/Hmm. I can't seem to find a book with that ID.../ ,
+  'not reading that' 
+);
 

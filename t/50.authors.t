@@ -2,24 +2,35 @@
 # $Id$
 # $URL$
 
-use Test::More     qw/ no_plan /;
-use Test::Output   qw/ stdout_from /;
+use Test::More    qw/ no_plan    /;
+use Test::Trap    qw/ trap $trap /;
 
 use Booklist::Cmd;
 
 use lib './t';
 require 'db.pm';
 
-my $error;
-my $stdout = do {
+trap {
   local @ARGV = ( 'authors' );
-  stdout_from( sub {
-    eval { Booklist::Cmd->run ; 1 } or $error = $@;
-  } );
+  Booklist::Cmd->run;
 };
 
-like $stdout , qr/^###  #bk  author/ , 'see expected header';
-ok ! $error;
+$trap->leaveby(
+  'return' ,
+  'return on non-error'
+);
 
-like $stdout , qr/^\s+9\s+1\s+Charles Stross\s*$/m ,
-  'see charlie stross at expected position';
+$trap->stdout_like(
+  qr/^###  #bk  author/ ,
+  'see expected header'
+);
+$trap->stdout_like(
+  qr/^\s+9\s+1\s+Charles Stross\s*$/m ,
+  'see charlie stross at expected position'
+);
+
+$trap->stderr_nok(
+  'stderr empty'
+);
+
+
