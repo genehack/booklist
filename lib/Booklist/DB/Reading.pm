@@ -22,8 +22,13 @@ __PACKAGE__->belongs_to( book => 'Booklist::DB::Book' );
 sub calc_reading_duration {
   my( $self ) = @_;
 
-  my $start    = DateTime->from_epoch( epoch => $self->startdate()  );
-  my $finish   = DateTime->from_epoch( epoch => $self->finishdate() );
+  my $f = $self->finishdate() || return 'UNFINISHED';
+  my $s = $self->startdate();
+  
+  return '1 day' if $f == $s;
+  
+  my $start    = DateTime->from_epoch( epoch => $s );
+  my $finish   = DateTime->from_epoch( epoch => $f );
   my $duration = $finish - $start;
 
   die "Couldn't calculate duration" unless $duration;
@@ -44,6 +49,18 @@ sub calc_reading_duration {
   }
   
   return $duration;
+}
+
+sub duration {
+  my( $self ) = @_;
+
+  my $f = $self->finishdate() || return 0;
+  my $s = $self->startdate();
+
+  # if finish = start round up to a day
+  return 60 * 60 * 24 if $f == $s;
+    
+  return $f - $s;
 }
 
 sub start_as_ymd {
@@ -77,8 +94,14 @@ Autoloaded by DBIC framework.
     my $duration = $reading->calc_reading_duration();
 
 Calculates and returns the time between the 'start' and 'finish' times of a
-reading object.
+reading object as a pretty-printed string.
 
+=head2 duration
+
+    my $duration = $reading->duration();
+
+Returns the time between the start and finish times of a reading object as a
+number of seconds.
 
 =head2 start_as_ymd
 
