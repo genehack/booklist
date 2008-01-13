@@ -15,7 +15,7 @@ use Booklist;
 
 sub opt_spec {
   (
-    [ 'id|i=s'                , 'book id'    ] ,
+    [ 'id|i=s'                , 'reading id'    ] ,
     [ ] ,
     [ 'finishdate|finish|d=s' , 'date finished reading (optional; defaults to today)' ] ,
   );
@@ -44,20 +44,10 @@ sub run {
 
   my $db = Booklist->db_handle();
 
-  my $book = $db->resultset('Book')->find($opt->{id});
-
-  unless ( $book ) {
-    print STDERR "Hmm. I can't seem to find a book with that ID...";
-    exit(1);
-  }
-
-  my $reading = $db->resultset('Reading')->find({ 
-    book       => $book->id ,
-    finishdate => undef , 
-  });
+  my $reading = $db->resultset('Reading')->find($opt->{id});
 
   unless ( $reading ) {
-    print STDERR "You don't seem to be currently reading a book with that title...";
+    print STDERR "Hmm. I can't seem to find a reading with that ID...";
     exit(1);
   }
 
@@ -72,7 +62,7 @@ sub run {
   $reading->finishdate( $finishdate );
   $reading->update();
 
-  my $title = $book->title;
+  my $title = $reading->book->title;
 
   my $duration;
   eval { $duration = $reading->calc_reading_duration };
