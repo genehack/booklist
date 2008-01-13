@@ -53,7 +53,7 @@ $trap->die_like (
 
 @args = (
   'finish'      ,
-  '--id' => $id ,
+  '--id' => 999 ,
 );
 
 trap {
@@ -76,34 +76,7 @@ $trap->stdout_nok(
 );
 
 $trap->stderr_like(
-  qr/You don't seem to be currently reading a book with that title/ ,
-  'not reading that' 
-);
-
-$args[-1] = 9999;
-
-trap {
-  local @ARGV = ( @args );
-  Booklist::Cmd->run;
-};
-
-
-$trap->leaveby_is( 
-  'exit' ,
-  'should exit when trying to finish a book that does not exist'
-);
-
-$trap->exit_is (
-  1 ,
-  'should exit with status 1 when trying to finish a book that does not exist' 
-);
-
-$trap->stdout_nok(
-  'and should not send anything to STDOUT when doing so' 
-);
-
-$trap->stderr_like(
-  qr/Hmm. I can't seem to find a book with that ID.../ ,
+  qr/Hmm. I can't seem to find a reading with that ID.../ ,
   'not reading that' 
 );
 
