@@ -77,12 +77,9 @@ sub run {
         $time , Booklist->epoch2ymd( $reading->finishdate );
     }
 
-    print <<EOL;
-$book by $names
-CATEGORIES: $tags
-$time
-
-EOL
+    print "$book by $names\n";
+    print "CATEGORIES: $tags\n" if $tags;
+    print "$time\n\n";
   }
 }
 
