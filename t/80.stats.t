@@ -21,8 +21,13 @@ $trap->leaveby_is(
 );
 
 $trap->stdout_like(
-  qr/1: Orbital Resonance by John Barnes/ ,
-  'list unread'
+  qr/SAW 4 BOOKS BY 4 AUTHORS/ , 
+  'show stats'
+);
+
+$trap->stdout_like(
+  qr/FINISHED 1 BOOK/ , 
+  'show stats'
 );
 
 $trap->stderr_nok(
