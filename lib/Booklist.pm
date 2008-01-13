@@ -116,6 +116,47 @@ sub epoch2ymd {
   return $t;
 }
 
+sub start_reading {
+  my( $class , $opt , $book ) = ( @_ );
+  
+  my $db = $class->db_handle();
+  
+  my $id    = $book->id;
+  my $title = $book->title;
+  
+  my $reading_count = $db->resultset('Reading')->find({
+    book       => $book->id ,
+    finishdate => undef ,
+  });
+  
+  my $startdate  = $opt->{startdate}  || time();
+  my $finishdate = $opt->{finishdate} || undef;
+
+  if ( $reading_count ) {
+    if ( $reading_count->startdate ) {
+      my $start = $reading_count->start_as_ymd();
+      print STDERR <<EOL;
+You seem to already be reading that book
+You started it on $start and have not yet recorded a finish date
+Use 'booklist finish --id "$id"' to finish this reading.
+EOL
+      exit(1);
+    }
+    else {
+      $reading_count->startdate( $startdate );
+      $reading_count->update();
+    }
+  }
+  else {
+    my $reading = $db->resultset('Reading')->create( {
+      book       => $book->id   ,
+      startdate  => $startdate  ,
+      finishdate => $finishdate ,
+    } );
+    return $reading;
+  }
+}
+
 sub ymd2epoch {
   my( $class , $date )  = @_;
 
@@ -168,7 +209,6 @@ Returns a Booklist::DB::Book object corresponding to the newly created book.
 
 Needs to be passed the second ($opt) arg passed to App::Cmd 'run()' functions, where ever that comes from. 
 
-
 =head2 db_handle
 
     my $db = Booklist->db_handle();
@@ -188,6 +228,15 @@ database.
     my $current_ymd = Booklist->epoch2ymd();
 
 Converts epoch time into a 'YYYYMMDD' string. Uses current time if one isn't given.
+
+=head2 start_reading
+
+    my $reading = Booklist->start_reading( $opt , $book );
+
+Returns a Booklist::DB::Reading object corresponding to the newly started reading.
+
+Needs to be passed the second ($opt) arg passed to App::Cmd 'run()' functions, where ever that comes from, as the first argument, and a Booklist::DB::Book object as the second argument. 
+
 
 =head2 ymd2epoch
 

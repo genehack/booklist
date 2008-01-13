@@ -61,39 +61,9 @@ sub run {
     $book = Booklist->add_book( $opt );
   }
 
-  my $id    = $book->id;
-  my $title = $book->title;
+  Booklist->start_reading( $opt , $book );
   
-  my $reading_count = $db->resultset('Reading')->find({
-    book       => $book->id ,
-    finishdate => undef ,
-  });
-  
-  my $startdate = $opt->{startdate} || time();
-  
-  if ( $reading_count ) {
-    if ( $reading_count->startdate ) {
-      my $start = $reading_count->start_as_ymd();
-      print STDERR <<EOL;
-You seem to already be reading that book
-You started it on $start and have not yet recorded a finish date
-Use 'booklist finish --id "$id"' to finish this reading.
-EOL
-      exit(1);
-    }
-    else {
-      $reading_count->startdate( $startdate );
-      $reading_count->update();
-    }
-  }
-  else {
-    my $reading = $db->resultset('Reading')->create( {
-      book       => $book->id  ,
-      startdate  => $startdate ,
-      finishdate => undef      ,
-    } );
-  }
-  print "Started to read '$title'\n";
+  printf "Started to read '%s'\n" , $book->title;
 }
 
 
