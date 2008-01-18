@@ -1,6 +1,8 @@
 use strict;
 use warnings;
 
+# test comment for collin
+
 use Module::Build;
 
 # $Id$ 
