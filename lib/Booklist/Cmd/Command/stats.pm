@@ -73,15 +73,18 @@ sub run {
   my @readings = $db->resultset('Reading')->search( $search ,
                                                     { order_by => 'id' } );
 
-  my( %books , %authors , $total_duration );
+  my( %books , %authors , $total_duration , $total_pages );
   my $unfinished = 0;
+  my( $min_pages , $max_pages ) = ( 999999999 , 0 );
+  my( $min_duration , $max_duration ) = ( 99999999 , 0 );
   
   foreach my $r( @readings ) {
     my $book     = $r->book;
     my @authors  = $r->book->authors;
     my @tags     = $r->book->tags;
     my $duration = $r->duration;
-
+    my $pages    = $r->book->pages;
+    
     $books{$book->id}{count}++;
     $books{$book->id}{obj} = $book;
     
@@ -92,6 +95,11 @@ sub run {
 
     if ( $duration ) {
       $total_duration += $duration;
+      $total_pages    += $pages;
+      if ( $pages < $min_pages ) { $min_pages = $pages }
+      if ( $pages > $max_pages ) { $max_pages = $pages }
+      if ( $duration < $min_duration ) { $min_duration = $duration }
+      if ( $duration > $max_duration ) { $max_duration = $duration }
     }
     else {
       $unfinished++;
@@ -119,14 +127,25 @@ sub run {
       $max_auth = $authors{$_}{obj};
     }
   }
+
   printf "SAW %d BOOKS BY %d AUTHORS\n" , $book_count , $author_count;
   printf "FINISHED %d BOOK" , $finished;
   print 'S' unless $finished == 1;
   print "\n";
   if ( $total_duration ) {
-    printf "TOTAL READING TIME: %d days\n" , $total_duration / (60 * 60 * 24);
-    printf "AVERAGE READING TIME: %5.2f days\n" ,
-      ( $total_duration / $finished ) / (60 * 60 * 24);
+    print "\n";
+    ### FIXME obvious refactor here
+    printf "AVERAGE READING TIME: %5d days\n" ,
+      int(( $total_duration / $finished ) / (60 * 60 * 24));
+    printf "     SLOWEST READING: %5d days\n" , int( $max_duration / ( 60 * 24 * 24 ));
+    printf "     FASTEST READING: %5d days\n" , int( $min_duration / ( 60 * 24 * 24 ));
+    print "\n";
+    printf "    TOTAL READ PAGES: %7d pages\n" , $total_pages;
+    printf "AVERAGE PAGES / BOOK: %7d pages\n" , int( $total_pages / $finished );
+    print "\n";
+    printf " LONGEST BOOK HAD: %d pages\n" , $max_pages;
+    printf "SHORTEST BOOK HAD: %d pages\n" , $min_pages;
+    
   }
   
   print "\n";
