@@ -69,6 +69,7 @@ sub run {
       $reading->id , $reading->book->title;
     my $names   = join ' & ' , map { $_->author } $reading->book->authors;
     my $tags    = join ', ' , map { $_->tag } $reading->book->tags;
+    my $pages   = $reading->book->pages;
     
     my $time    = sprintf "  STARTED: %s" , $reading->start_as_ymd ;
     if ( $reading->finishdate ) {
@@ -77,7 +78,7 @@ sub run {
         $time , Booklist->epoch2ymd( $reading->finishdate );
     }
 
-    print "$book by $names\n";
+    print "$book by $names ($pages pages)\n";
     print "CATEGORIES: $tags\n" if $tags;
     print "$time\n\n";
   }
