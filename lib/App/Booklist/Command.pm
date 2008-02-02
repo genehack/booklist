@@ -1,4 +1,4 @@
-package Booklist::Cmd;
+package App::Booklist::Command;
 
 # $Id$
 # $URL$
@@ -16,7 +16,7 @@ __END__
 
 =head1 NAME
 
-Booklist::Cmd - App::Cmd wrapper for booklist
+App::Booklist::Command - App::Cmd wrapper for booklist
 
 =head1 SYNOPSIS
 
