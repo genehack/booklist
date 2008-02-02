@@ -134,11 +134,9 @@ sub run {
   print "\n";
   if ( $total_duration ) {
     print "\n";
-    ### FIXME obvious refactor here
-    printf "AVERAGE READING TIME: %5d days\n" ,
-      int(( $total_duration / $finished ) / (60 * 60 * 24));
-    printf "     SLOWEST READING: %5d days\n" , int( $max_duration / ( 60 * 24 * 24 ));
-    printf "     FASTEST READING: %5d days\n" , int( $min_duration / ( 60 * 24 * 24 ));
+    printf "AVERAGE READING TIME: %5d days\n" , _sec2days( $total_duration / $finished );
+    printf "     SLOWEST READING: %5d days\n" , _sec2days( $max_duration );
+    printf "     FASTEST READING: %5d days\n" , _sec2days( $min_duration );
     print "\n";
     printf "    TOTAL READ PAGES: %7d pages\n" , $total_pages;
     printf "AVERAGE PAGES / BOOK: %7d pages\n" , int( $total_pages / $finished );
@@ -147,6 +145,7 @@ sub run {
     printf "SHORTEST BOOK HAD: %d pages\n" , $min_pages;
     
   }
+
   
   print "\n";
 
@@ -166,6 +165,10 @@ sub run {
   }
 }
 
+sub _sec2days {
+  my( $sec ) = shift;
+  return int( $sec / ( 60 * 24 * 24 ));
+}
 
 1; # Magic true value required at end of module
 
