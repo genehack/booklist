@@ -21,6 +21,7 @@ sub opt_spec {
     [ 'read|r'       , 'list all read books in database' ] ,
     [ 'notstarted|n' , 'list all unstarted books in database' ] ,
     [ 'unfinished|u' , 'list all unread books in database (default if nothing else specified)' ],
+    [ 'year|y'       , 'restrict list to current year (default is to show all data)' ],
   );
 }
 
@@ -30,6 +31,14 @@ sub validate_args {
   # no args allowed but options!
   $self->usage_error("No args allowed") if @$args;
 
+  if ( $opt->{all} and $opt->{year} ) {
+    $self->usage_error( "--all and --year are mutually incompatible" );
+  }
+
+  if ( $opt->{notstarted} and $opt->{year} ) {
+    $self->usage_error( "--notstarted and --year are mutually incompatible" );
+  }
+  
   if(     $opt->{all}        ) { $opt->{LIST} = 'all'        }
   elsif ( $opt->{read}       ) { $opt->{LIST} = 'read'       }
   elsif ( $opt->{notstarted} ) { $opt->{LIST} = 'notstarted' }
@@ -62,6 +71,14 @@ sub run {
     };
   }
 
+  if ( $opt->{year} ) {
+    my $dt1  = DateTime->now;
+    my $year = $dt1->year;
+    my $dt2  = DateTime->new( year => $year );
+    my $e1   = $dt2->epoch - 1;
+    $search->{startdate} = { '>' => $e1 };
+  }
+  
   my $readings = $db->resultset('Reading')->search( $search , { order_by => 'id' });
 
   while ( my $reading = $readings->next) {
