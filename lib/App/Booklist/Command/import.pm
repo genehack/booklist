@@ -53,6 +53,8 @@ sub run {
     
     $opt->{startdate} = App::Booklist->ymd2epoch( $yaml->{$_}{start} );
 
+    $opt->{tag} = $yaml->{$_}{tags};
+    
     $opt->{finishdate} = undef;
     if ( $yaml->{$_}{finish} ) {
       $opt->{finishdate} = App::Booklist->ymd2epoch( $yaml->{$_}{finish} )
