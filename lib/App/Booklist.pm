@@ -1,4 +1,4 @@
-package Booklist;
+package App::Booklist;
 
 # $Id$
 # $URL$
@@ -13,7 +13,10 @@ use FindBin;
 use YAML             qw/ LoadFile /;
 
 use lib "$FindBin::Bin/../lib";
-use Booklist::DB;
+use App::Booklist::DB;
+
+use base qw/ App::Cmd /;
+
 
 my $rc_file = "$ENV{HOME}/.booklistrc";
 
@@ -75,7 +78,7 @@ sub db_handle {
   die "Database file '$DB_FILE' doesn't exist -- maybe run 'make_database' command?"
     unless -e $DB_FILE;
   
-  $db = Booklist::DB->connect(
+  $db = App::Booklist::DB->connect(
     "dbi:SQLite:$DB_FILE",
     q{}, q{}, { AutoCommit => 1 } ,
   );
@@ -193,7 +196,7 @@ __END__
 
 =head1 NAME
 
-Booklist - Track books you want to read, are reading, and have read
+App::Booklist - Track books you want to read, are reading, and have read
 
 =head1 SYNOPSIS
 
@@ -203,44 +206,44 @@ You don't use this directly.
 
 =head2 add_book
 
-    my $book = Booklist->add_book( $opt );
+    my $book = App::Booklist->add_book( $opt );
 
-Returns a Booklist::DB::Book object corresponding to the newly created book.
+Returns a App::Booklist::DB::Book object corresponding to the newly created book.
 
 Needs to be passed the second ($opt) arg passed to App::Cmd 'run()' functions, where ever that comes from. 
 
 =head2 db_handle
 
-    my $db = Booklist->db_handle();
+    my $db = App::Booklist->db_handle();
 
 Returns a DBIx::Class::Schema object connected to the booklist database
 
 =head2 db_location 
 
-    my $dbfile = Booklist->db_location();
+    my $dbfile = App::Booklist->db_location();
 
-Returns the filesystem path to the file containing the Booklist SQLite
+Returns the filesystem path to the file containing the App::Booklist SQLite
 database.
 
 =head2 epoch2ymd
 
-    my $ymd = Booklist->epoch2ymd( $epoch_time_value );
-    my $current_ymd = Booklist->epoch2ymd();
+    my $ymd = App::Booklist->epoch2ymd( $epoch_time_value );
+    my $current_ymd = App::Booklist->epoch2ymd();
 
 Converts epoch time into a 'YYYYMMDD' string. Uses current time if one isn't given.
 
 =head2 start_reading
 
-    my $reading = Booklist->start_reading( $opt , $book );
+    my $reading = App::Booklist->start_reading( $opt , $book );
 
-Returns a Booklist::DB::Reading object corresponding to the newly started reading.
+Returns a App::Booklist::DB::Reading object corresponding to the newly started reading.
 
-Needs to be passed the second ($opt) arg passed to App::Cmd 'run()' functions, where ever that comes from, as the first argument, and a Booklist::DB::Book object as the second argument. 
+Needs to be passed the second ($opt) arg passed to App::Cmd 'run()' functions, where ever that comes from, as the first argument, and a App::Booklist::DB::Book object as the second argument. 
 
 
 =head2 ymd2epoch
 
-    my $epoch_time_value = Booklist->ymd2epoch( $ymd );
+    my $epoch_time_value = App::Booklist->ymd2epoch( $ymd );
 
 Converts a 'YYYYMMDD' string into epoch time.
 
