@@ -1,4 +1,4 @@
-package Booklist::Cmd::Command::make_database;
+package App::Booklist::Command::make_database;
 
 # $Id$
 # $URL$
@@ -13,7 +13,7 @@ use File::SearchPath qw/ searchpath /;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
 
-use Booklist;
+use App::Booklist;
 
 sub usage_desc { "%c make_database" }
 
@@ -34,7 +34,7 @@ sub validate_args {
 sub run {
   my( $self , $opt , $args ) = @_;
 
-  my $db_file = Booklist->db_location();
+  my $db_file = App::Booklist->db_location();
 
   if ( -e $db_file ) {
     if ( $opt->{force} ) {
@@ -115,7 +115,7 @@ __END__
 
 =head1 NAME
 
-Booklist::Cmd::Command::make_database - create a new empty booklist database in the default location
+App::Booklist::Command::make_database - create a new empty booklist database in the default location
 
 =head1 SYNOPSIS
 

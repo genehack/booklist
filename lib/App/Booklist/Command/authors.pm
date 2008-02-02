@@ -1,4 +1,4 @@
-package Booklist::Cmd::Command::authors;
+package App::Booklist::Command::authors;
 
 # $Id$
 # $URL$
@@ -11,7 +11,7 @@ use base qw/ App::Cmd::Command /;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
 
-use Booklist;
+use App::Booklist;
 
 sub usage_desc { "%c authors" }
 
@@ -28,7 +28,7 @@ sub validate_args {
 sub run {
   my( $self , $opt , $args ) = @_;
 
-  my $db = Booklist->db_handle();
+  my $db = App::Booklist->db_handle();
 
   my $authors = $db->resultset('Author')->search( undef , { order_by => 'id' });
 
@@ -49,7 +49,7 @@ __END__
 
 =head1 NAME
 
-Booklist::Cmd::Command::authors - list all authors from database
+App::Booklist::Command::authors - list all authors from database
 
 =head1 SYNOPSIS
 

@@ -1,4 +1,4 @@
-package Booklist::Cmd::Command::list;
+package App::Booklist::Command::list;
 
 # $Id$
 # $URL$
@@ -11,7 +11,7 @@ use base qw/ App::Cmd::Command /;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
 
-use Booklist;
+use App::Booklist;
 
 sub usage_desc { "%c list %o" }
 
@@ -40,7 +40,7 @@ sub validate_args {
 sub run {
   my( $self , $opt , $args ) = @_;
 
-  my $db = Booklist->db_handle();
+  my $db = App::Booklist->db_handle();
 
   my $search;
   if ( $opt->{LIST} eq 'all' ) {
@@ -75,7 +75,7 @@ sub run {
     if ( $reading->finishdate ) {
       my $duration = $reading->calc_reading_duration();
       $time = sprintf "%s    FINISHED: %s   ($duration)" ,
-        $time , Booklist->epoch2ymd( $reading->finishdate );
+        $time , App::Booklist->epoch2ymd( $reading->finishdate );
     }
 
     print "$book by $names ($pages pages)\n";
@@ -91,7 +91,7 @@ __END__
 
 =head1 NAME
 
-Booklist::Cmd::Command::list - list books in the database
+App::Booklist::Command::list - list books in the database
 
 =head1 SYNOPSIS
 

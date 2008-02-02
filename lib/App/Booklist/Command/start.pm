@@ -1,4 +1,4 @@
-package Booklist::Cmd::Command::start;
+package App::Booklist::Command::start;
 
 # $Id$
 # $URL$
@@ -11,7 +11,7 @@ use base qw/ App::Cmd::Command /;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
 
-use Booklist;
+use App::Booklist;
 
 sub opt_spec {
   (
@@ -33,7 +33,7 @@ sub validate_args {
 
   if ( $opt->{startdate} ) {
     eval {
-      $opt->{startdate} = Booklist->ymd2epoch( $opt->{startdate} ); 
+      $opt->{startdate} = App::Booklist->ymd2epoch( $opt->{startdate} ); 
     };
     $self->usage_error( $@ ) if ( $@ );
   }
@@ -51,17 +51,17 @@ sub validate_args {
 sub run {
   my( $self , $opt , $args ) = @_;
 
-  my $db = Booklist->db_handle();
+  my $db = App::Booklist->db_handle();
 
   my $book;
   if ( $opt->{id} ) {
     $book = $db->resultset('Book')->find( $opt->{id} );
   }
   else {
-    $book = Booklist->add_book( $opt );
+    $book = App::Booklist->add_book( $opt );
   }
 
-  Booklist->start_reading( $opt , $book );
+  App::Booklist->start_reading( $opt , $book );
   
   printf "Started to read '%s'\n" , $book->title;
 }
@@ -73,7 +73,7 @@ __END__
 
 =head1 NAME
 
-Booklist::Cmd::Command::start - start reading a book
+App::Booklist::Command::start - start reading a book
 
 =head1 SYNOPSIS
 

@@ -1,4 +1,4 @@
-package Booklist::Cmd::Command::import;
+package App::Booklist::Command::import;
 
 # $Id$
 # $URL$
@@ -13,7 +13,7 @@ use YAML qw/ LoadFile /;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
 
-use Booklist;
+use App::Booklist;
 
 sub usage_desc { "%c import" }
 
@@ -43,7 +43,7 @@ sub run {
 
   my $yaml = LoadFile( $opt->{file} );
   
-  my $db = Booklist->db_handle();
+  my $db = App::Booklist->db_handle();
 
   foreach ( sort { $a <=> $b } keys %$yaml ) {
     $opt->{title}  = $yaml->{$_}{title};
@@ -51,16 +51,16 @@ sub run {
     
     $opt->{author} = [ $yaml->{$_}{author} ];
     
-    $opt->{startdate} = Booklist->ymd2epoch( $yaml->{$_}{start} );
+    $opt->{startdate} = App::Booklist->ymd2epoch( $yaml->{$_}{start} );
 
     $opt->{finishdate} = undef;
     if ( $yaml->{$_}{finish} ) {
-      $opt->{finishdate} = Booklist->ymd2epoch( $yaml->{$_}{finish} )
+      $opt->{finishdate} = App::Booklist->ymd2epoch( $yaml->{$_}{finish} )
     }
 
-    my $book = Booklist->add_book( $opt );
+    my $book = App::Booklist->add_book( $opt );
     
-    my $reading = Booklist->start_reading( $opt , $book );
+    my $reading = App::Booklist->start_reading( $opt , $book );
 
     printf "Added reading for '%s' (start = %s ; finish = %s)\n" ,
       $book->title , $yaml->{$_}{start} , $yaml->{$_}{finish} || 'NEVER';
@@ -76,17 +76,17 @@ __END__
 
 =head1 NAME
 
-Booklist::Cmd::Command::authors - list all authors from database
+App::Booklist::Command::import - import a YAML reading list file into the database
 
 =head1 SYNOPSIS
 
-Start reading a book
+Import a YAML reading list file into the database
 
 
 
-    booklist start --title $TITLE --author $AUTHOR --pages $PAGES [ --startedate $YYYYMMDD ]
+    booklist import --file $FILE
 
-    booklist start -t $TITLE -a $AUTHOR -p $PAGES [ -d $YYYYMMDD ]
+    booklist start -f $FILE
 
 =head1 BUGS AND LIMITATIONS
 

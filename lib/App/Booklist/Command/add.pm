@@ -1,4 +1,4 @@
-package Booklist::Cmd::Command::add;
+package App::Booklist::Command::add;
 
 # $Id$
 # $URL$
@@ -11,7 +11,7 @@ use base qw/ App::Cmd::Command /;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
 
-use Booklist;
+use App::Booklist;
 
 sub opt_spec {
   (
@@ -40,10 +40,10 @@ sub validate_args {
 sub run {
   my( $self , $opt , $args ) = @_;
 
-  my $book  = Booklist->add_book( $opt );
+  my $book  = App::Booklist->add_book( $opt );
   my $title = $book->title;
 
-  my $db = Booklist->db_handle();
+  my $db = App::Booklist->db_handle();
   
   my $reading_count = $db->resultset('Reading')->find({
     book       => $book->id ,
@@ -91,7 +91,7 @@ __END__
 
 =head1 NAME
 
-Booklist::Cmd::Command::start - add a book to read later
+App::Booklist::Command::add - add a book to read later
 
 =head1 SYNOPSIS
 

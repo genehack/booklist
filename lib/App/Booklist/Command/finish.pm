@@ -1,4 +1,4 @@
-package Booklist::Cmd::Command::finish;
+package App::Booklist::Command::finish;
 
 # $Id$
 # $URL$
@@ -11,7 +11,7 @@ use base qw/ App::Cmd::Command /;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
 
-use Booklist;
+use App::Booklist;
 
 sub opt_spec {
   (
@@ -32,7 +32,7 @@ sub validate_args {
   
   if ( $opt->{finishdate} ) {
     eval {
-      $opt->{finishdate} = Booklist->ymd2epoch( $opt->{finishdate} ); 
+      $opt->{finishdate} = App::Booklist->ymd2epoch( $opt->{finishdate} ); 
     };
     $self->usage_error( $@ ) if ( $@ );
   }
@@ -42,7 +42,7 @@ sub validate_args {
 sub run {
   my( $self , $opt , $args ) = @_;
 
-  my $db = Booklist->db_handle();
+  my $db = App::Booklist->db_handle();
 
   my $reading = $db->resultset('Reading')->find($opt->{id});
 
@@ -78,7 +78,7 @@ __END__
 
 =head1 NAME
 
-Booklist::Cmd::Command::finish - finish reading a book
+App::Booklist::Command::finish - finish reading a book
 
 =head1 SYNOPSIS
 

@@ -1,4 +1,4 @@
-package Booklist::Cmd::Command::stats;
+package App::Booklist::Command::stats;
 
 # $Id$
 # $URL$
@@ -13,7 +13,7 @@ use DateTime;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
 
-use Booklist;
+use App::Booklist;
 
 sub usage_desc { "%c stats" }
 
@@ -44,7 +44,7 @@ sub validate_args {
 sub run {
   my( $self , $opt , $args ) = @_;
 
-  my $db = Booklist->db_handle();
+  my $db = App::Booklist->db_handle();
 
   my $search;
     
@@ -176,17 +176,22 @@ __END__
 
 =head1 NAME
 
-Booklist::Cmd::Command::authors - list all authors from database
+App::Booklist::Command::stats - generate descriptive stats from the database
 
 =head1 SYNOPSIS
 
-Start reading a book
+Generate descriptive stats from the database
 
 
 
-    booklist start --title $TITLE --author $AUTHOR --pages $PAGES [ --startedate $YYYYMMDD ]
+    booklist stats
 
-    booklist start -t $TITLE -a $AUTHOR -p $PAGES [ -d $YYYYMMDD ]
+    booklist stats --year $YEAR
+    booklist stats -y $YEAR
+
+    booklist stats --all
+    booklist stats -a
+
 
 =head1 BUGS AND LIMITATIONS
 
