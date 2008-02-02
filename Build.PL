@@ -1,18 +1,16 @@
 use strict;
 use warnings;
 
-# test comment for collin
-
 use Module::Build;
 
 # $Id$ 
 # $URL$
 
 my $builder = Module::Build->new(
-    module_name         => 'Booklist',
+    module_name         => 'App::Booklist',
     license             => 'perl',
     dist_author         => 'John SJ Anderson <genehack@genehack.org>',
-    dist_version_from   => 'lib/Booklist.pm',
+    dist_version_from   => 'lib/App/Booklist.pm',
     requires => {
       'App::Cmd'            => 0 ,
       'App::Cmd::Command'   => 0 ,
