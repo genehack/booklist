@@ -1,4 +1,4 @@
-package Booklist::DB::Tag;
+package App::Booklist::DB::Tag;
 
 # $Id$
 # $URL$
@@ -16,7 +16,7 @@ __PACKAGE__->add_columns( qw/ id tag / );
 
 __PACKAGE__->set_primary_key( 'id' );
 
-__PACKAGE__->has_many( bookstags => 'Booklist::DB::BookTag' => 'tag' );
+__PACKAGE__->has_many( bookstags => 'App::Booklist::DB::BookTag' => 'tag' );
 
 __PACKAGE__->many_to_many( books => 'bookstags' , 'book' );
 
@@ -30,7 +30,7 @@ __END__
 
 =head1 NAME
 
-Booklist::DB::Tag - DBIC table class for the 'tag' table.
+App::Booklist::DB::Tag - DBIC table class for the 'tag' table.
 
 =head1 SYNOPSIS
 

@@ -1,4 +1,4 @@
-package Booklist::DB::Author;
+package App::Booklist::DB::Author;
 
 # $Id$
 # $URL$
@@ -16,7 +16,7 @@ __PACKAGE__->add_columns( qw/ id author / );
 
 __PACKAGE__->set_primary_key( 'id' );
 
-__PACKAGE__->has_many( authorsbooks => 'Booklist::DB::AuthorBook' => 'author' );
+__PACKAGE__->has_many( authorsbooks => 'App::Booklist::DB::AuthorBook' => 'author' );
 
 __PACKAGE__->many_to_many( books => 'authorsbooks' => 'book' );
 
@@ -32,7 +32,7 @@ __END__
 
 =head1 NAME
 
-Booklist::DB::Author - DBIC table class for the 'author' table.
+App::Booklist::DB::Author - DBIC table class for the 'author' table.
 
 =head1 SYNOPSIS
 

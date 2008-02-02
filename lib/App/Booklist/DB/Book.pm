@@ -1,4 +1,4 @@
-package Booklist::DB::Book;
+package App::Booklist::DB::Book;
 
 # $Id$
 # $URL$
@@ -16,9 +16,9 @@ __PACKAGE__->add_columns( qw/ id pages title added / );
 
 __PACKAGE__->set_primary_key( 'id' );
 
-__PACKAGE__->has_many( authorsbooks => 'Booklist::DB::AuthorBook' => 'book' );
-__PACKAGE__->has_many( bookstags    => 'Booklist::DB::BookTag'    => 'book' );
-__PACKAGE__->has_many( readings     => 'Booklist::DB::Reading' );
+__PACKAGE__->has_many( authorsbooks => 'App::Booklist::DB::AuthorBook' => 'book' );
+__PACKAGE__->has_many( bookstags    => 'App::Booklist::DB::BookTag'    => 'book' );
+__PACKAGE__->has_many( readings     => 'App::Booklist::DB::Reading' );
 
 __PACKAGE__->many_to_many( authors => 'authorsbooks' , 'author' );
 __PACKAGE__->many_to_many( tags    => 'bookstags'    , 'tag'    );
@@ -38,7 +38,7 @@ __END__
 
 =head1 NAME
 
-Booklist::DB::Book - DBIC table class for the 'book' table.
+App::Booklist::DB::Book - DBIC table class for the 'book' table.
 
 =head1 SYNOPSIS
 

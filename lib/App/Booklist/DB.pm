@@ -1,4 +1,4 @@
-package Booklist::DB;
+package App::Booklist::DB;
 
 # $Id$
 # $URL$
@@ -18,11 +18,11 @@ __END__
 
 =head1 NAME
 
-Booklist::DB - DBIC wrapper for booklist
+App::Booklist::DB - DBIC wrapper for booklist
 
 =head1 SYNOPSIS
 
-    use Booklist::DB;
+    use App::Booklist::DB;
     my $schema = Booklist::DB->connect( $dbi_dsn, $user, $pass, \%dbi_params );
 
 =head1 DESCRIPTION

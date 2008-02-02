@@ -1,4 +1,4 @@
-package Booklist::DB::Reading;
+package App::Booklist::DB::Reading;
 
 # $Id$
 # $URL$
@@ -16,7 +16,7 @@ __PACKAGE__->add_columns( qw/ id book startdate finishdate rating / );
 
 __PACKAGE__->set_primary_key( 'id' );
 
-__PACKAGE__->belongs_to( book => 'Booklist::DB::Book' );
+__PACKAGE__->belongs_to( book => 'App::Booklist::DB::Book' );
 
 
 sub calc_reading_duration {
@@ -81,7 +81,7 @@ __END__
 
 =head1 NAME
 
-Booklist::DB::Reading - DBIC table class for the 'reading' table.
+App::Booklist::DB::Reading - DBIC table class for the 'reading' table.
 
 =head1 SYNOPSIS
 
