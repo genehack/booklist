@@ -5,13 +5,12 @@
 use Test::More    qw/ no_plan /;
 use Test::Trap    qw/ trap $trap /;
 
-use Booklist;
-use Booklist::Cmd;
+use App::Booklist;
 
 use lib './t';
 require 'db.pm';
 
-my $today  = Booklist->epoch2ymd();
+my $today  = App::Booklist->epoch2ymd();
 
 my $title  = 'The Last Colony';
 my $author = 'John Scalzi';
@@ -26,7 +25,7 @@ my @args = (
 
 trap {
   local @ARGV = ( @args );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 $trap->leaveby(
@@ -47,7 +46,7 @@ $args[0] = 'start';
 
 trap {
   local @ARGV = ( @args );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 $trap->leaveby(
@@ -68,7 +67,7 @@ $args[0] = 'add';
 
 trap {
   local @ARGV = ( @args );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 $trap->leaveby(

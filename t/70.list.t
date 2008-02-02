@@ -5,8 +5,7 @@
 use Test::More    qw/ no_plan /;
 use Test::Trap    qw/ trap $trap /;
 
-use Booklist;
-use Booklist::Cmd;
+use App::Booklist;
 
 use lib './t';
 require 'db.pm';
@@ -15,7 +14,7 @@ my @args = ( 'list' );
 
 trap {
   local @ARGV = ( @args );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 $trap->leaveby(
@@ -38,7 +37,7 @@ push @args , '--unfinished';
 
 trap {
   local @ARGV = ( @args );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 is( $trap->stdout , $old_stdout ,
@@ -46,7 +45,7 @@ is( $trap->stdout , $old_stdout ,
 
 trap {
   local @ARGV = ( 'list' , '--read' );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 $trap->leaveby(
@@ -76,12 +75,12 @@ my $pages  = 357;
 
 trap {
   local @ARGV = ( @args );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 trap {
   local @ARGV = ( 'list' , '--notstarted' );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 $trap->leaveby(
@@ -101,7 +100,7 @@ $trap->stderr_nok(
 
 trap {
   local @ARGV = ('list','--all');
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 $trap->leaveby(

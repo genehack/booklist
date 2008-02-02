@@ -5,17 +5,16 @@
 use Test::More    qw/ no_plan    /;
 use Test::Trap    qw/ trap $trap /;
 
-use Booklist;
-use Booklist::Cmd;
+use App::Booklist;
 
 use lib './t';
 require 'db.pm';
 
-my $test_db_name = Booklist->db_location();
+my $test_db_name = App::Booklist->db_location();
 
 trap {
   local @ARGV = ( 'make_database' , '--force' );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 $trap->stderr_nok(

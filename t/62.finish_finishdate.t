@@ -5,21 +5,20 @@
 use Test::More    qw/ no_plan /;
 use Test::Trap    qw/ trap $trap /;
 
-use Booklist;
-use Booklist::Cmd;
+use App::Booklist;
 
 use lib './t';
 require 'db.pm';
 
-my $db         = Booklist->db_handle;
+my $db         = App::Booklist->db_handle;
 my $title      = 'Thud';
 my $book       = $db->resultset('Book')->find({ title => $title });
 my $id         = $book->id;
 my $finish     = '2007-06-01';
-my $finishdate = Booklist->ymd2epoch($finish);
+my $finishdate = App::Booklist->ymd2epoch($finish);
 
 # copied from t/32.*.t where we added this book in the first place...
-my $startdate  = Booklist->ymd2epoch('2007-01-01');
+my $startdate  = App::Booklist->ymd2epoch('2007-01-01');
 
 my $reading = $db->resultset('Reading')->create( {
   book       => $book->id   ,
@@ -36,7 +35,7 @@ my @args = (
 
 trap {
   local @ARGV = ( @args );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 $trap->leaveby(

@@ -5,14 +5,13 @@
 use Test::More    qw/ no_plan /;
 use Test::Trap    qw/ trap $trap /;
 
-use Booklist;
-use Booklist::Cmd;
+use App::Booklist;
 
 use lib './t';
 require 'db.pm';
 
 my $title  = 'The Sleeping Dragon';
-my $id     = Booklist->db_handle->resultset('Book')->find( { 
+my $id     = App::Booklist->db_handle->resultset('Book')->find( { 
   title => $title
 } )->id;
 
@@ -23,7 +22,7 @@ my @args = (
 
 trap {
   local @ARGV = ( @args );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 $trap->leaveby(
@@ -35,7 +34,7 @@ $args[0] = 'finish';
 
 trap {
   local @ARGV = ( @args );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 

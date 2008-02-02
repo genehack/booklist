@@ -5,8 +5,7 @@
 use Test::More    qw/ no_plan /;
 use Test::Trap    qw/ trap $trap /;
 
-use Booklist;
-use Booklist::Cmd;
+use App::Booklist;
 
 use lib './t';
 require 'db.pm';
@@ -15,7 +14,7 @@ my $title  = 'Orbital Resonance';
 my $author = 'John Barnes';
 my $pages  = 218;
 
-my $today  = Booklist->epoch2ymd();
+my $today  = App::Booklist->epoch2ymd();
 
 
 my @args = (
@@ -27,7 +26,7 @@ my @args = (
 
 trap {
   local @ARGV = ( @args );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 $trap->leaveby_is( 'return' , 'exit okay' );
@@ -37,7 +36,7 @@ $trap->stdout_like( qr/Started to read '$title'/ ,
 
 $trap->stderr_nok( 'stderr is empty' );
 
-my $book = Booklist->db_handle->resultset('Book')->find( {
+my $book = App::Booklist->db_handle->resultset('Book')->find( {
   title => $title
 } );
 
@@ -58,7 +57,7 @@ is $book->readings->first->finishdate , undef ,
 
 trap {
   local @ARGV = ( @args );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 $trap->leaveby_is( 'exit' , 

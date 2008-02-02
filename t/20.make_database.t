@@ -7,18 +7,17 @@ use Test::Trap    qw/ trap $trap /;
 
 use Test::File;
 
-use Booklist;
-use Booklist::Cmd;
+use App::Booklist;
 
 use lib './t';
 require 'db.pm';
 
 my $test_db_name  = "./.testing_booklist.db";
 
-is( Booklist->db_location , $test_db_name ,
+is( App::Booklist->db_location , $test_db_name ,
   'db_location honors environment variable' );
 
-trap { Booklist->db_handle() };
+trap { App::Booklist->db_handle() };
 
 $trap->leaveby_is( 'die' ,
   'db_handle dies when database file not there' );
@@ -28,7 +27,7 @@ $trap->die_like(  qr/Database file '$test_db_name' doesn't exist/ ,
 
 trap {
   local @ARGV = ( 'make_database' );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 $trap->stdout_like( qr/Created database at $test_db_name/ ,
@@ -40,12 +39,12 @@ $trap->stderr_nok(
 file_exists_ok( $test_db_name ,
   'make_database created a file' );
 
-isa_ok( Booklist->db_handle , 'DBIx::Class::Schema' ,
+isa_ok( App::Booklist->db_handle , 'DBIx::Class::Schema' ,
   'db_handle returns a DBIC::S object' );
 
 trap {
   local @ARGV = ( 'make_database' );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 $trap->leaveby_is( 'exit' ,

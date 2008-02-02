@@ -5,14 +5,14 @@
 use Test::More    qw/ no_plan /;
 use Test::Trap    qw/ trap $trap /;
 
-use Booklist::Cmd;
+use App::Booklist;
 
 use lib './t';
 require 'db.pm';
 
 trap {
   local @ARGV = ( 'stats' );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 $trap->leaveby_is(

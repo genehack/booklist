@@ -5,7 +5,7 @@
 use Test::More    qw/ no_plan /;
 use Test::Trap    qw/ trap $trap /;
 
-use Booklist::Cmd;
+use App::Booklist;
 
 use lib './t';
 require 'db.pm';
@@ -27,7 +27,7 @@ push @args , ( '--tag' => $_ ) foreach ( @tags );
 
 trap {
   local @ARGV = ( @args );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 $trap->leaveby(
@@ -46,7 +46,7 @@ $trap->stderr_nok(
 
 trap {
   local @ARGV = ( @args );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 $trap->leaveby(
@@ -73,7 +73,7 @@ $trap->stderr_like(
   'stderr should also have the start date' 
 );
 
-my $book = Booklist->db_handle->resultset('Book')->find( {
+my $book = App::Booklist->db_handle->resultset('Book')->find( {
   title => $title
 } );
 

@@ -6,12 +6,12 @@ use Test::More qw/ no_plan /;
 
 use Test::File;
 
-use Booklist;
+use App::Booklist;
 
 use lib './t';
 require 'db.pm';
 
-my $file = Booklist->db_location();
+my $file = App::Booklist->db_location();
 unlink $file;
 
 file_not_exists_ok $file , 

@@ -5,7 +5,7 @@
 use Test::More    qw/ no_plan /;
 use Test::Trap    qw/ trap $trap /;
 
-use Booklist::Cmd;
+use App::Booklist;
 
 use lib './t';
 require 'db.pm';
@@ -27,7 +27,7 @@ my @args = (
 
 trap {
   local @ARGV = ( @args );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 $trap->leaveby_is(
@@ -44,7 +44,7 @@ $trap->stderr_nok( 'nothing on stderr' );
 
 trap {
   local @ARGV = ( @args );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 $trap->leaveby_is(
@@ -72,7 +72,7 @@ $trap->stderr_like(
 );
 
 
-my $db   = Booklist->db_handle;
+my $db   = App::Booklist->db_handle;
 my $book = $db->resultset('Book')->find({title => $title });
 
 my @bookauthors;

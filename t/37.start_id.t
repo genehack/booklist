@@ -5,8 +5,7 @@
 use Test::More    qw/ no_plan /;
 use Test::Trap    qw/ trap $trap /;
 
-use Booklist;
-use Booklist::Cmd;
+use App::Booklist;
 
 use lib './t';
 require 'db.pm';
@@ -15,7 +14,7 @@ my $title  = 'Halting State';
 my $author = 'Charles Stross';
 my $pages  = 351;
 
-my $today  = Booklist->epoch2ymd();
+my $today  = App::Booklist->epoch2ymd();
 
 my @args = (
   'add' ,
@@ -26,7 +25,7 @@ my @args = (
 
 trap {
   local @ARGV = ( @args );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 $trap->leaveby_is(
@@ -43,7 +42,7 @@ $trap->stderr_nok(
   'and nothing on stderr'
 );
 
-my $id = Booklist->db_handle->resultset('Book')->find( {
+my $id = App::Booklist->db_handle->resultset('Book')->find( {
   title => $title
 } )->id;
 
@@ -54,7 +53,7 @@ my $id = Booklist->db_handle->resultset('Book')->find( {
 
 trap {
   local @ARGV = ( @args );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 $trap->leaveby(

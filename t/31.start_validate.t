@@ -5,8 +5,7 @@
 use Test::More    qw/ no_plan /;
 use Test::Trap    qw/ trap $trap /;
 
-use Booklist;
-use Booklist::Cmd;
+use App::Booklist;
 
 use lib './t';
 require 'db.pm';
@@ -15,11 +14,11 @@ my $title  = 'CSS Cookbook';
 my $author = 'Christopher Schmitt';
 my $pages  = 252;
 
-my $today  = Booklist->epoch2ymd();
+my $today  = App::Booklist->epoch2ymd();
 
 trap {
   local @ARGV = ( 'start' );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 $trap->leaveby_is( 'die' ,
@@ -35,7 +34,7 @@ my @args = (
 
 trap {
   local @ARGV = ( @args );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 $trap->leaveby_is( 'die' ,
@@ -48,7 +47,7 @@ push @args , ( '--author' => $author );
 
 trap {
   local @ARGV = ( @args );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 $trap->leaveby_is( 'die' ,
@@ -61,7 +60,7 @@ push @args , 'argument';
 
 trap {
   local @ARGV = ( @args );
-  Booklist::Cmd->run;
+  App::Booklist->run;
 };
 
 $trap->leaveby_is( 'die' ,
