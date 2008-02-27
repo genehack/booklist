@@ -1,19 +1,21 @@
-Booklist version 0.0.1
+App::Booklist version 0.1
+=========================
 
-[ REPLACE THIS...
+    Track books you have read, are reading, or plan to some day read.
+    Currently CLI-only but maybe one way we'll grow a web layer.
 
-  The README is used to introduce the module and provide instructions on
-  how to install the module, any machine dependencies it may have (for
-  example C compilers and installed libraries) and any other information
-  that should be understood before the module is installed.
+DESCRIPTION
 
-  A README file is required for CPAN modules since CPAN extracts the
-  README file from a module distribution so that people browsing the
-  archive can use it get an idea of the modules uses. It is usually a
-  good idea to provide version information here so that people can
-  decide whether fixes for the module are worth downloading.
-]
+This module supports a command-line app, booklist, which will generate
+a small SQLite database and store various bits of book-related
+information in it. It will also generate various descriptive
+statistics, so you can easily get a count of the number of books
+you've read so far this year, or the number of unfinished books you're
+currently reading, or even the total number of pages you've read since
+you started keeping track.
 
+Basically, the target audience is OCD-afflicted bibliophiles who think
+plain text files are a bit too passe.
 
 INSTALLATION
 
@@ -27,7 +29,8 @@ To install this module, run the following commands:
 
 DEPENDENCIES
 
-None.
+Many, but they're all Perlish and should be taken care of if you
+follow the usual steps.
 
 
 COPYRIGHT AND LICENCE
