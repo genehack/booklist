@@ -1,0 +1,7 @@
+0.2 - Wed Feb 27 05:14:18 EST 2008
+
+ * Add dep on File::SearchPath - doh!
+
+0.1 - Tue Feb 26 21:25:17 EST 2008
+
+ * Initial release
