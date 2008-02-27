@@ -17,6 +17,7 @@ my $builder = Module::Build->new(
       'DateTime'            => 0 ,
       'DBIx::Class'         => 0 ,
       'DBIx::Class::Schema' => 0 ,
+      'File::SearchPath'    => 0 ,
       'FindBin'             => 0 ,
       'Test::Exception'     => 0 ,
       'Test::File'          => 0 ,
