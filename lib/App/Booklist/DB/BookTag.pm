@@ -12,7 +12,10 @@ __PACKAGE__->load_components( qw/ PK::Auto Core / );
 
 __PACKAGE__->table( 'books_tags' );
 
-__PACKAGE__->add_columns( qw/ book tag / );
+__PACKAGE__->add_columns(
+  book => { data_type => 'INTEGER' } ,
+  tag  => { data_type => 'INTEGER' } ,
+);
 
 __PACKAGE__->set_primary_key( qw/ book tag / );
 

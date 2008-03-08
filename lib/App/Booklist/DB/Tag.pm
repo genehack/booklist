@@ -12,7 +12,10 @@ __PACKAGE__->load_components( qw/ PK::Auto Core / );
 
 __PACKAGE__->table( 'tags' );
 
-__PACKAGE__->add_columns( qw/ id tag / );
+__PACKAGE__->add_columns(
+  id  => { data_type => 'INTEGER' , is_auto_increment => 1 } ,
+  tag => { data_type => 'TEXT' , is_nullable => 1 } ,
+);
 
 __PACKAGE__->set_primary_key( 'id' );
 

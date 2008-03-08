@@ -12,7 +12,12 @@ __PACKAGE__->load_components( qw/ PK::Auto Core / );
 
 __PACKAGE__->table( 'books' );
 
-__PACKAGE__->add_columns( qw/ id pages title added / );
+__PACKAGE__->add_columns(
+  id    => { data_type => 'INTEGER' , is_auto_increment => 1 } , 
+  added => { data_type => 'INTEGER' , is_nullable => 1 } ,
+  pages => { data_type => 'INTEGER' , is_nullable => 1 } ,
+  title => { data_type => 'TEXT' , is_nullable => 1} ,
+);
 
 __PACKAGE__->set_primary_key( 'id' );
 

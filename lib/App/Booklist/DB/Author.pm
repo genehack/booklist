@@ -12,7 +12,10 @@ __PACKAGE__->load_components( qw/ PK::Auto Core / );
 
 __PACKAGE__->table( 'authors' );
 
-__PACKAGE__->add_columns( qw/ id author / );
+__PACKAGE__->add_columns(
+  id     => { data_type => 'INTEGER' , is_auto_increment => 1 } ,
+  author => { data_type => 'TEXT' , is_nullable => 1 } ,
+);
 
 __PACKAGE__->set_primary_key( 'id' );
 
