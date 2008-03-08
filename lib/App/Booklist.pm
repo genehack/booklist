@@ -6,7 +6,7 @@ package App::Booklist;
 use warnings;
 use strict;
 
-use version; our $VERSION = qv('0.2');
+use version; our $VERSION = qv('0.3_01');
 
 use DateTime;
 use FindBin;

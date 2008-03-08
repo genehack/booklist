@@ -1,5 +1,5 @@
-App::Booklist version 0.2
-=========================
+App::Booklist version 0.3_01
+============================
 
     Track books you have read, are reading, or plan to some day read.
     Currently CLI-only but maybe one way we'll grow a web layer.
