@@ -70,13 +70,15 @@ sub add_book {
 
 my $db;
 sub db_handle {
-  my( $class ) = ( @_ );
+  my( $class , %params ) = ( @_ );
   
   return $db if $db;
 
   my $DB_FILE = $class->db_location;
-  die "Database file '$DB_FILE' doesn't exist -- maybe run 'make_database' command?"
-    unless -e $DB_FILE;
+  unless ( $params{missing_ok} ) {
+    die "Database file '$DB_FILE' doesn't exist -- maybe run 'make_database' command?"
+      unless -e $DB_FILE;
+  }
   
   $db = App::Booklist::DB->connect(
     "dbi:SQLite:$DB_FILE",
