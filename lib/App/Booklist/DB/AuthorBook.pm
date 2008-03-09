@@ -36,7 +36,7 @@ __END__
 
 =head1 NAME
 
-App::Booklist::DB::BookAuthor - DBIC table class for the 'bookauthor' table.
+App::Booklist::DB::AuthorBook - DBIC table class for the 'authorbook' table.
 
 =head1 SYNOPSIS
 
