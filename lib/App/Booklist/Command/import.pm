@@ -48,7 +48,8 @@ sub run {
   foreach ( sort { $a <=> $b } keys %$yaml ) {
     $opt->{title}  = $yaml->{$_}{title};
     $opt->{pages}  = $yaml->{$_}{pages};
-    
+
+    ### FIXME somewhere in here multiple authors get turned into a stringified 'ARRAY#'
     $opt->{author} = [ $yaml->{$_}{author} ];
     
     $opt->{startdate} = App::Booklist->ymd2epoch( $yaml->{$_}{start} );
