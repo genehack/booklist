@@ -19,6 +19,7 @@ my $builder = Module::Build->new(
       'DBIx::Class::Schema' => 0 ,
       'File::SearchPath'    => 0 ,
       'FindBin'             => 0 ,
+      'IO::Interactive'     => 0 ,
       'SQL::Translator'     => 0 , 
       'Test::Exception'     => 0 ,
       'Test::File'          => 0 ,
