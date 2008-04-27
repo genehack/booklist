@@ -24,7 +24,7 @@ trap {
 $trap->leaveby_is( 'die' ,
   'die on bad args' );
 
-$trap->die_like( qr/title is a required option/ ,
+$trap->die_like( qr/Need to supply a title/ ,
   'you needs a title' );
 
 my @args = (
@@ -40,7 +40,7 @@ trap {
 $trap->leaveby_is( 'die' ,
   'die on bad args' );
 
-$trap->die_like( qr/author is a required option/ ,
+$trap->die_like( qr/Need to supply at least one author/ ,
   'you needs an author too' );
 
 push @args , ( '--author' => $author );
@@ -53,7 +53,7 @@ trap {
 $trap->leaveby_is( 'die' ,
   'die on bad args' );
 
-$trap->die_like( qr/pages is a required option/ ,
+$trap->die_like( qr/Need to supply page count/ ,
   'and you has to track pages yo' );
 
 push @args , 'argument';

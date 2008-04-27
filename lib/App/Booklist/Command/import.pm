@@ -50,11 +50,11 @@ sub run {
     $opt->{pages}  = $yaml->{$_}{pages};
 
     ### FIXME somewhere in here multiple authors get turned into a stringified 'ARRAY#'
-    $opt->{author} = [ $yaml->{$_}{author} ];
+    $opt->{author} = App::Booklist->transform_input_to_array_ref( $yaml->{$_}{author} );
     
     $opt->{startdate} = App::Booklist->ymd2epoch( $yaml->{$_}{start} );
 
-    $opt->{tag} = $yaml->{$_}{tags};
+    $opt->{tag} = App::Booklist->transform_input_to_array_ref( $yaml->{$_}{tags} );
     
     $opt->{finishdate} = undef;
     if ( $yaml->{$_}{finish} ) {

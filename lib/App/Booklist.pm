@@ -10,6 +10,7 @@ use version; our $VERSION = version->new("0.5");
 
 use DateTime;
 use FindBin;
+use IO::Interactive  qw/ is_interactive /;
 use YAML             qw/ LoadFile /;
 
 use lib "$FindBin::Bin/../lib";
@@ -25,21 +26,16 @@ sub add_book {
   my( $class , $opt ) = ( @_ );
 
   my $db = $class->db_handle();
-  
-  my @authors;
-  foreach my $author ( @{ $opt->{author} } ) {
-    foreach my $a ( split /\s*,\s*/ , $author ) {
-      push @authors ,
-        $db->resultset('Author')->find_or_create({ author => $a });
-    }
-  }
 
-  my @tags;
-  foreach my $tag ( @{ $opt->{tag} } ) {
-    foreach my $t ( split /\s*,\s*/ , $tag ) {
-      push @tags , $db->resultset('Tag')->find_or_create({ tag => $t });
-    }
-  }
+  ### FIXME first do the book, then do the author/tag loops. only one loop that way
+  
+  my @authors = map {
+    $db->resultset('Author')->find_or_create({ author => $_ });
+  } @{ $opt->{author} };
+
+  my @tags = map {
+    $db->resultset('Tag')->find_or_create({ tag => $_ });
+  } @{ $opt->{tag} };
   
   my $book = $db->resultset('Book')->find_or_create({
     title  => $opt->{title} ,
@@ -185,6 +181,62 @@ sub ymd2epoch {
 }  
 
 
+sub transform_input_to_array_ref {
+  my( $class , $input ) = @_;
+
+  # $input is either a scalar or an array.
+  
+  # the scalar may be one item or many comma-delim'd items
+  
+  # the array will have one or more elements; each element will be a scalar
+  # with one item or many comma-delim'd items
+
+  # whatever it is, we're going to transform it into a reference to an array
+  # of items
+
+  my @input;
+  my $array_ref = [];
+  
+  return $array_ref unless $input;
+    
+  if ( ref( $input) eq 'ARRAY' ) { @input = @$input }
+  else { @input = ( $input ) }
+
+  foreach my $element ( @input ) {
+    foreach my $item ( split /\s*,\s*/ , $element ) {
+      push @$array_ref , $item
+    }
+  }
+
+  return $array_ref;
+}
+
+
+sub prompt_for_title {
+  shift->prompt("Book title? ");
+}
+
+sub prompt_for_author {
+  shift->prompt("Book author(s)? (comma-delimited, please): ");
+}
+
+sub prompt_for_pages {
+  shift->prompt("Number of pages in book? ");
+}
+
+sub prompt_for_tags {
+  shift->prompt("What tags apply to this book? (comma-delimited, please): ");
+}
+
+sub prompt {
+  my( $class,  $prompt ) = @_;
+  if ( -t STDIN && -t STDOUT ) {
+    print $prompt;
+    chomp( my $response = <STDIN> );
+    return $response;
+  }
+  else { return '' }
+}
 
 
 

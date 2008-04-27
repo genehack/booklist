@@ -81,4 +81,6 @@ foreach ( $book->authors ) {
 }
 my $bookauthors = join ',' , sort @bookauthors;
 
+
+
 is( $authors , $bookauthors , 'authors is authors' );

@@ -40,10 +40,23 @@ sub validate_args {
 
   return if ( $opt->{id} );
   
-  foreach my $var ( qw/ title author pages / ) {
-    $self->usage_error( "$var is a required option" )
-      unless $opt->{$var};
-  }
+  ### FIXME set up inheritance hierarchy so that you can call these on $self
+  
+  $opt->{VALIDATED}{title} = $opt->{title} 
+    || App::Booklist->prompt_for_title
+      || $self->usage_error("Need to supply a title" );
+  
+  $opt->{author} ||= App::Booklist->prompt_for_author
+    || $self->usage_error("Need to supply at least one author" );
+  $opt->{VALIDATED}{author} = App::Booklist->transform_input_to_array_ref( $opt->{author} );
+  
+  $opt->{VALIDATED}{pages} = $opt->{pages} 
+    || App::Booklist->prompt_for_pages
+      || $self->usage_error( "Need to supply page count" );
+
+  $opt->{tags} ||= App::Booklist->prompt_for_tags;
+  $opt->{VALIDATED}{tags} = App::Booklist->transform_input_to_array_ref( $opt->{tags} );
+
 
 }
 
@@ -58,7 +71,8 @@ sub run {
     $book = $db->resultset('Book')->find( $opt->{id} );
   }
   else {
-    $book = App::Booklist->add_book( $opt );
+    my $validated_args = $opt->{VALIDATED};
+    $book = App::Booklist->add_book( $validated_args );
   }
 
   App::Booklist->start_reading( $opt , $book );

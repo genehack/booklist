@@ -29,18 +29,31 @@ sub validate_args {
   # no args allowed but options!
   $self->usage_error("No args allowed") if @$args;
 
-  foreach my $var ( qw/ title author pages / ) {
-    $self->usage_error( "$var is a required option" )
-      unless $opt->{$var};
-  }
+  ### FIXME set up inheritance hierarchy so that you can call these on $self
+  
+  $opt->{VALIDATED}{title} = $opt->{title} 
+    || App::Booklist->prompt_for_title
+      || $self->usage_error("Need to supply a title" );
+  
+  $opt->{author} ||= App::Booklist->prompt_for_author
+    || $self->usage_error("Need to supply at least one author" );
+  $opt->{VALIDATED}{author} = App::Booklist->transform_input_to_array_ref( $opt->{author} );
+  
+  $opt->{VALIDATED}{pages} = $opt->{pages} 
+    || App::Booklist->prompt_for_pages
+      || $self->usage_error( "Need to supply page count" );
+
+  $opt->{tags} ||= App::Booklist->prompt_for_tags;
+  $opt->{VALIDATED}{tags} = App::Booklist->transform_input_to_array_ref( $opt->{tags} );
 
 }
-
 
 sub run {
   my( $self , $opt , $args ) = @_;
 
-  my $book  = App::Booklist->add_book( $opt );
+  my $validated_args = $opt->{VALIDATED};
+    
+  my $book  = App::Booklist->add_book( $validated_args );
   my $title = $book->title;
 
   my $db = App::Booklist->db_handle();

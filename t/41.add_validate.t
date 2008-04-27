@@ -27,7 +27,7 @@ $trap->leaveby(
 );
 
 $trap->die_like(
-  qr/title is a required option/ ,
+  qr/Need to supply a title/m ,
   'you needs a title'
 );
 
@@ -44,7 +44,7 @@ $trap->leaveby(
 );
 
 $trap->die_like(
-  qr/author is a required option/ ,
+  qr/Need to supply at least one author/ ,
   'you needs an author too'
 );
 
@@ -61,7 +61,7 @@ $trap->leaveby(
 );
 
 $trap->die_like(
-  qr/pages is a required option/ ,
+  qr/Need to supply page count/ ,
   'and you has to track pages yo'
 );
 
