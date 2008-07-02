@@ -75,6 +75,8 @@ sub run {
     $book = App::Booklist->add_book( $validated_args );
   }
 
+  $book || die "Couldn't find that book.";
+    
   App::Booklist->start_reading( $opt , $book );
   
   printf "Started to read '%s'\n" , $book->title;
