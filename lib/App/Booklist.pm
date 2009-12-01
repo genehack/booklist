@@ -1,8 +1,5 @@
 package App::Booklist;
 
-# $Id$
-# $URL$
-
 use warnings;
 use strict;
 
@@ -18,9 +15,7 @@ use App::Booklist::DB;
 
 use base qw/ App::Cmd /;
 
-
 my $rc_file = "$ENV{HOME}/.booklistrc";
-
 
 sub add_book {
   my( $class , $opt ) = ( @_ );
@@ -28,7 +23,7 @@ sub add_book {
   my $db = $class->db_handle();
 
   ### FIXME first do the book, then do the author/tag loops. only one loop that way
-  
+
   my @authors = map {
     $db->resultset('Author')->find_or_create({ author => $_ });
   } @{ $opt->{author} };
@@ -36,7 +31,7 @@ sub add_book {
   my @tags = map {
     $db->resultset('Tag')->find_or_create({ tag => $_ });
   } @{ $opt->{tag} };
-  
+
   my $book = $db->resultset('Book')->find_or_create({
     title  => $opt->{title} ,
     pages  => $opt->{pages} ,
@@ -45,8 +40,8 @@ sub add_book {
 
   $book->added( time() );
   $book->update();
-  
-    
+
+
   foreach my $author ( @authors ) {
     $db->resultset('AuthorBook')->find_or_create({
       author => $author->id ,
@@ -67,7 +62,7 @@ sub add_book {
 my $db;
 sub db_handle {
   my( $class , %params ) = ( @_ );
-  
+
   return $db if $db;
 
   my $DB_FILE = $class->db_location;
@@ -75,7 +70,7 @@ sub db_handle {
     die "Database file '$DB_FILE' doesn't exist -- maybe run 'make_database' command?"
       unless -e $DB_FILE;
   }
-  
+
   $db = App::Booklist::DB->connect(
     "dbi:SQLite:$DB_FILE",
     q{}, q{}, { AutoCommit => 1 } ,
@@ -87,7 +82,7 @@ sub db_handle {
 my $DB_FILE;
 sub db_location {
   my( $class ) = ( @_ );
-  
+
   return $DB_FILE if $DB_FILE;
 
   if ( $ENV{BOOKLIST_DB} ) {
@@ -107,29 +102,29 @@ sub epoch2ymd {
   my( $class , $date ) = @_;
 
   $date = time() unless defined $date;
-  
+
   my $t;
   eval {
     $t = DateTime->from_epoch( epoch => $date )->ymd;
   };
   die $@ if $@;
-  
+
   return $t;
 }
 
 sub start_reading {
   my( $class , $opt , $book ) = ( @_ );
-  
+
   my $db = $class->db_handle();
-  
+
   my $id    = $book->id;
   my $title = $book->title;
-  
+
   my $reading_count = $db->resultset('Reading')->find({
     book       => $book->id ,
     finishdate => undef ,
   });
-  
+
   my $startdate  = $opt->{startdate}  || time();
   my $finishdate = $opt->{finishdate} || undef;
 
@@ -164,30 +159,30 @@ sub ymd2epoch {
 
   die "Date must be in YYYYMMDD format"
     unless $date =~ /^(\d{8}|\d{4}-\d{2}-\d{2})$/;
-  
+
   my ( $yr , $mo , $dy ) = $date =~ /^(\d{4})-?(\d{2})-?(\d{2})$/;
 
   my $t;
   eval {
     $t = DateTime->new(
-      year  => $yr , 
+      year  => $yr ,
       month => $mo ,
       day   => $dy ,
     );
   };
   die $@ if $@;
-  
+
   return $t->epoch;
-}  
+}
 
 
 sub transform_input_to_array_ref {
   my( $class , $input ) = @_;
 
   # $input is either a scalar or an array.
-  
+
   # the scalar may be one item or many comma-delim'd items
-  
+
   # the array will have one or more elements; each element will be a scalar
   # with one item or many comma-delim'd items
 
@@ -196,9 +191,9 @@ sub transform_input_to_array_ref {
 
   my @input;
   my $array_ref = [];
-  
+
   return $array_ref unless $input;
-    
+
   if ( ref( $input) eq 'ARRAY' ) { @input = @$input }
   else { @input = ( $input ) }
 
@@ -254,7 +249,7 @@ App::Booklist - Track books you want to read, are reading, and have read
 
 =head1 SYNOPSIS
 
-You don't use this directly. 
+You don't use this directly.
 
 =head1 INTERFACE
 
@@ -264,7 +259,7 @@ You don't use this directly.
 
 Returns a App::Booklist::DB::Book object corresponding to the newly created book.
 
-Needs to be passed the second ($opt) arg passed to App::Cmd 'run()' functions, where ever that comes from. 
+Needs to be passed the second ($opt) arg passed to App::Cmd 'run()' functions, where ever that comes from.
 
 =head2 db_handle
 
@@ -272,7 +267,7 @@ Needs to be passed the second ($opt) arg passed to App::Cmd 'run()' functions, w
 
 Returns a DBIx::Class::Schema object connected to the booklist database
 
-=head2 db_location 
+=head2 db_location
 
     my $dbfile = App::Booklist->db_location();
 
@@ -292,7 +287,7 @@ Converts epoch time into a 'YYYYMMDD' string. Uses current time if one isn't giv
 
 Returns a App::Booklist::DB::Reading object corresponding to the newly started reading.
 
-Needs to be passed the second ($opt) arg passed to App::Cmd 'run()' functions, where ever that comes from, as the first argument, and a App::Booklist::DB::Book object as the second argument. 
+Needs to be passed the second ($opt) arg passed to App::Cmd 'run()' functions, where ever that comes from, as the first argument, and a App::Booklist::DB::Book object as the second argument.
 
 
 =head2 ymd2epoch

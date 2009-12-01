@@ -1,8 +1,5 @@
 package App::Booklist::DB::Reading;
 
-# $Id$
-# $URL$
-
 use warnings;
 use strict;
 
@@ -30,20 +27,20 @@ sub calc_reading_duration {
 
   my $f = $self->finishdate() || return 'UNFINISHED';
   my $s = $self->startdate();
-  
+
   return '1 day' if $f == $s;
-  
+
   my $start    = DateTime->from_epoch( epoch => $s );
   my $finish   = DateTime->from_epoch( epoch => $f );
   my $duration = $finish - $start;
 
   die "Couldn't calculate duration" unless $duration;
-    
+
   my( $mo , $dy ) = $duration->in_units( 'months' , 'days'  );
 
   my $dys = 's';
   $dys = '' if $dy == 1;
-    
+
   if ( $mo ) {
     my $mos = '';
     $mos = 's' if $mo > 1;
@@ -51,9 +48,9 @@ sub calc_reading_duration {
     $duration = sprintf "%d month%s, %d day%s" , $mo , $mos , $dy , $dys;
   }
   else {
-    $duration = sprintf "%d day%s" , $dy , $dys; 
+    $duration = sprintf "%d day%s" , $dy , $dys;
   }
-  
+
   return $duration;
 }
 
@@ -65,7 +62,7 @@ sub duration {
 
   # if finish = start round up to a day
   return 60 * 60 * 24 if $f == $s;
-    
+
   return $f - $s;
 }
 
@@ -91,7 +88,7 @@ App::Booklist::DB::Reading - DBIC table class for the 'reading' table.
 
 =head1 SYNOPSIS
 
-Autoloaded by DBIC framework. 
+Autoloaded by DBIC framework.
 
 =head1 INTERFACE
 

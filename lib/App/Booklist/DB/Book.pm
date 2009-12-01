@@ -1,8 +1,5 @@
 package App::Booklist::DB::Book;
 
-# $Id$
-# $URL$
-
 use warnings;
 use strict;
 
@@ -13,7 +10,7 @@ __PACKAGE__->load_components( qw/ PK::Auto Core / );
 __PACKAGE__->table( 'books' );
 
 __PACKAGE__->add_columns(
-  id    => { data_type => 'INTEGER' , is_auto_increment => 1 } , 
+  id    => { data_type => 'INTEGER' , is_auto_increment => 1 } ,
   added => { data_type => 'INTEGER' , is_nullable => 1 } ,
   pages => { data_type => 'INTEGER' , is_nullable => 1 } ,
   title => { data_type => 'TEXT' , is_nullable => 1} ,
@@ -47,7 +44,7 @@ App::Booklist::DB::Book - DBIC table class for the 'book' table.
 
 =head1 SYNOPSIS
 
-Autoloaded by DBIC framework. 
+Autoloaded by DBIC framework.
 
 =head1 INTERFACE
 

@@ -1,8 +1,5 @@
 package App::Booklist::DB::Tag;
 
-# $Id$
-# $URL$
-
 use warnings;
 use strict;
 
@@ -37,7 +34,7 @@ App::Booklist::DB::Tag - DBIC table class for the 'tag' table.
 
 =head1 SYNOPSIS
 
-Autoloaded by DBIC framework. 
+Autoloaded by DBIC framework.
 
 =head1 BUGS AND LIMITATIONS
 

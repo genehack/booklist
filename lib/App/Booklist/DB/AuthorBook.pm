@@ -1,8 +1,5 @@
 package App::Booklist::DB::AuthorBook;
 
-# $Id$
-# $URL$
-
 use warnings;
 use strict;
 
@@ -40,7 +37,7 @@ App::Booklist::DB::AuthorBook - DBIC table class for the 'authorbook' table.
 
 =head1 SYNOPSIS
 
-Autoloaded by DBIC framework. 
+Autoloaded by DBIC framework.
 
 =head1 BUGS AND LIMITATIONS
 

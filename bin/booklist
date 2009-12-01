@@ -1,7 +1,4 @@
-#! /opt/perl/bin/perl 
-
-# $Id$
-# $URL$
+#! /opt/perl/bin/perl
 
 use warnings;
 use strict;
@@ -17,7 +14,6 @@ __END__
 =head1 NAME
 
 booklist - Manage your reading list.
-
 
 =head1 VERSION
 
