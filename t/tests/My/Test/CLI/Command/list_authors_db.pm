@@ -1,4 +1,4 @@
-package My::Test::CLI::Command::list_authors;
+package My::Test::CLI::Command::list_authors_db;
 use base 'My::Test::CLI::BASE';
 
 use Test::More;
@@ -11,29 +11,20 @@ sub base_args {
   return [ 'list_authors' , '--configfile' , $config_file ];
 }
 
-sub list_authors_missing_db :Tests(5) {
+sub setup_config :Tests(startup) {
   my $test = shift;
+  $test->SUPER::setup_config;
 
-  my $result = test_app( 'App::Booklist::CLI' => $test->base_args );
+  my $db = $test->{db_file};
+  my $schema = App::Booklist::CLI::BASE->deploy_db( $db );
+  $schema->resultset('Authors')->create({ fname => 'Foo' , lname => 'Bar' });
+  $schema->resultset('Authors')->create({ fname => 'Bar' , lname => 'Baz' });
 
-  is(   $result->stdout    , ''                                       , 'nothing on stdout'  );
-  like( $result->stderr    , qr/ERROR: Unable to connect to database/ , 'expected error'     );
-  is(   $result->exit_code , 1                                        , 'expected exit code' );
-
-  my $error = $result->error;
-  isa_ok( $error , 'App::Cmd::Tester::Exited' );
-  is( $$error , 1 );
+  $test->{schema} = $schema;
 }
 
 sub list_authors_with_db :Tests(6) {
   my $test = shift;
-
-  use App::Booklist::Schema;
-  my $db = $test->{db_file};
-  App::Booklist::CLI::Command::make_database->deploy_db( $db );
-  my $schema = App::Booklist::Schema->connect( "dbi:SQLite:$db" );
-  $schema->resultset('Authors')->create({ fname => 'Foo' , lname => 'Bar' });
-  $schema->resultset('Authors')->create({ fname => 'Bar' , lname => 'Baz' });
 
   my $result = test_app( 'App::Booklist::CLI' => $test->base_args );
 

@@ -2,7 +2,6 @@ use MooseX::Declare;
 
 class App::Booklist::CLI::Command::del_author extends App::Booklist::CLI::BASE {
   use 5.010;
-  use App::Booklist::Schema;
 
   has id => (
     isa => 'Num' , is => 'rw' ,
@@ -11,19 +10,8 @@ class App::Booklist::CLI::Command::del_author extends App::Booklist::CLI::BASE {
     required => 1 ,
   );
 
-  sub execute {
-    my( $self , $opt , $args ) = @_;
-
-    my $db = $self->file;
-
-    unless ( -e $db ) {
-      printf STDERR <<EOM and exit(1);
-ERROR: Unable to connect to database.
-Do you need to run 'make_database'?
-EOM
-    }
-
-    my $schema = App::Booklist::Schema->connect( "dbi:SQLite:$db" );
+  method execute ( $opt , $args ) {
+    my $schema = $self->get_schema();
 
     if ( my $author = $schema->resultset('Authors')->find($self->id) ) {
       $author->delete;

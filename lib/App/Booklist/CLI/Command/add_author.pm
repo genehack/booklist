@@ -2,8 +2,6 @@ use MooseX::Declare;
 
 class App::Booklist::CLI::Command::add_author extends App::Booklist::CLI::BASE {
   use 5.010;
-  use App::Booklist::Schema;
-  use App::Booklist::CLI::Command::make_database;
 
   has first => (
     isa => 'Str' , is => 'rw' ,
@@ -21,15 +19,8 @@ class App::Booklist::CLI::Command::add_author extends App::Booklist::CLI::BASE {
     required => 1 ,
   );
 
-  sub execute {
-    my( $self , $opt , $args ) = @_;
-
-    my $db = $self->file;
-
-    App::Booklist::CLI::Command::make_database->deploy_db( $db )
-        unless -e $db;
-
-    my $schema = App::Booklist::Schema->connect( "dbi:SQLite:$db" );
+  method execute ( $opt , $args ) {
+    my $schema = $self->get_schema_and_deploy_db_if_needed();
 
     my $author = $schema->resultset('Authors')->create({
       lname => $self->last ,
