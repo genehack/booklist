@@ -1,0 +1,4 @@
+#! /opt/perl/bin/perl
+use App::Booklist::CLI;
+App::Booklist::CLI->run;
+1;

@@ -1,5 +1,4 @@
 package App::Booklist;
-
 use warnings;
 use strict;
 use 5.010;
@@ -12,7 +11,7 @@ __END__
 
 =head1 NAME
 
-App::Booklist - The great new App::Booklist!
+App::Booklist - keep track of your reading from the command line or the web
 
 =head1 VERSION
 
@@ -20,20 +19,8 @@ Version 0.01
 
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
-
-Perhaps a little code snippet.
-
-    use App::Booklist;
-
-    my $foo = App::Booklist->new();
-    ...
-
-=head1 SUBROUTINES/METHODS
-
-=head2 function1
-
-=head2 function2
+Base class for web and CLI versions of App-Booklist -- mainly here to hold the
+version...
 
 =head1 AUTHOR
 
@@ -76,6 +63,9 @@ L<http://search.cpan.org/dist/App-Booklist/>
 =back
 
 =head1 ACKNOWLEDGEMENTS
+
+Web interface heavily heavily influenced by oddbook
+(L<http://code.google.com/p/oddbook/>).
 
 =head1 LICENSE AND COPYRIGHT
 
