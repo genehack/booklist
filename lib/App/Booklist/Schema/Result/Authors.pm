@@ -21,4 +21,10 @@ __PACKAGE__->has_many(
 
 __PACKAGE__->many_to_many( 'books' , 'author_books' , 'book' );
 
+sub full_name {
+  my( $self ) = shift;
+
+  return sprintf '%s %s' , $self->fname , $self->lname;
+}
+
 1;

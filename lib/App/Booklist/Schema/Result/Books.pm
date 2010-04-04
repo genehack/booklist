@@ -34,4 +34,19 @@ __PACKAGE__->has_many(
 );
 __PACKAGE__->many_to_many( 'readings' , 'book_readings' , 'reading' );
 
+sub author_list {
+  my( $self ) = @_;
+
+  my @authors = ();
+
+  push @authors , $_->full_name
+    foreach ( $self->authors );
+
+  if ( @authors == 2 ) { return join ' & ' , @authors }
+  else {
+    $authors[-1] = "& $authors[-1]";
+    return join ', ' , @authors;
+  }
+}
+
 1;
