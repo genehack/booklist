@@ -1,38 +1,16 @@
 package My::Test::CLI::Command::make_database;
-use base 'Test::Class';
+use base 'My::Test::CLI::BASE';
 
 use Test::More;
 use Test::File;
+use File::Temp  qw/ tmpnam /;
 use App::Cmd::Tester;
-
-use File::Temp  qw/ tmpnam tempfile /;
-use YAML        qw/ DumpFile /;
 
 sub base_args {
   my $test = shift;
   my $config_file = $test->{config_file};
 
   return [ 'make_database' , '--configfile' , $config_file ];
-}
-
-sub class { 'App::Booklist::CLI' }
-
-sub setup :Tests(startup => 1 ) {
-  my $test = shift;
-  use_ok $test->class;
-}
-
-sub setup_config :Tests(startup) {
-  my $test = shift;
-
-  my( undef , $config_file ) = tempfile( 'configXXXX' , SUFFIX => '.yaml' );
-
-  my $db_file = tmpnam() . '.db';
-
-  DumpFile( $config_file , { file => $db_file });
-
-  $test->{config_file} = $config_file;
-  $test->{db_file}     = $db_file;
 }
 
 sub make_database :Tests(5) {
@@ -99,11 +77,5 @@ sub make_database_with_provided_filename :Tests(5) {
   file_exists_ok( $db_file );
   unlink( $db_file );
 }
-
-sub shutdown :Tests(shutdown) {
-  my $test = shift;
-  unlink $test->{config_file} , $test->{db_file};
-};
-
 
 1;

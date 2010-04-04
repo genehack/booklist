@@ -1,37 +1,14 @@
 package My::Test::CLI::Command::list_authors;
-use base 'Test::Class';
+use base 'My::Test::CLI::BASE';
 
 use Test::More;
 use App::Cmd::Tester;
-
-use File::Temp  qw/ tmpnam tempfile /;
-use YAML        qw/ DumpFile /;
 
 sub base_args {
   my $test = shift;
   my $config_file = $test->{config_file};
 
   return [ 'list_authors' , '--configfile' , $config_file ];
-}
-
-sub class { 'App::Booklist::CLI' }
-
-sub setup :Tests(startup => 1) {
-  my $test = shift;
-  use_ok $test->class;
-}
-
-sub setup_config :Tests(startup) {
-  my $test = shift;
-
-  my( undef , $config_file ) = tempfile( 'configXXXX' , SUFFIX => '.yaml' );
-
-  my $db_file = tmpnam() . '.db';
-
-  DumpFile( $config_file , { file => $db_file });
-
-  $test->{config_file} = $config_file;
-  $test->{db_file}     = $db_file;
 }
 
 sub list_authors_missing_db :Tests(5) {
@@ -66,11 +43,6 @@ sub list_authors_with_db :Tests(6) {
   is(   $result->stderr    , ''                              , 'nothing on stderr'  );
   is(   $result->error     , undef                           , 'no exception' );
   is(   $result->exit_code , 0                               , 'clean exit code' );
-}
-
-sub shutdown :Tests(shutdown) {
-  my $test = shift;
-  unlink $test->{config_file} , $test->{db_file};
 }
 
 1;
