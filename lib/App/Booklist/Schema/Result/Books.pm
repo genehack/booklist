@@ -29,10 +29,9 @@ __PACKAGE__->has_many(
 __PACKAGE__->many_to_many( 'tags' , 'book_tags' , 'tag' );
 
 __PACKAGE__->has_many(
-  'book_readings' => 'App::Booklist::Schema::Result::Readings' ,
+  'readings' => 'App::Booklist::Schema::Result::Readings' ,
   { 'foreign.book_id' => 'self.id' } ,
 );
-__PACKAGE__->many_to_many( 'readings' , 'book_readings' , 'reading' );
 
 sub author_list {
   my( $self ) = @_;
