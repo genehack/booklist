@@ -31,7 +31,7 @@ sub add_book_only_author :Tests(4) {
   is(   $result->stdout    , ''                          , 'nothing on stdout'  );
   is(   $result->stderr    , ''                          , 'nothing on stderr'  );
   like( $result->error     , qr/Required option missing/ , 'expected exception' );
-  is(   $result->exit_code , 9                           , 'expected exit code' );
+  is(   $result->exit_code , -1                          , 'expected exit code' );
 }
 
 sub add_book_only_title :Tests(4) {
@@ -43,7 +43,7 @@ sub add_book_only_title :Tests(4) {
   is(   $result->stdout    , ''                          , 'nothing on stdout'  );
   is(   $result->stderr    , ''                          , 'nothing on stderr'  );
   like( $result->error     , qr/Required option missing/ , 'expected exception' );
-  is(   $result->exit_code , 9                           , 'expected exit code' );
+  is(   $result->exit_code , -1                          , 'expected exit code' );
 }
 
 1;

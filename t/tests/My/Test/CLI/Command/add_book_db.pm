@@ -88,7 +88,7 @@ sub add_book_title_author_bad_isbn :Tests(4) {
   is(   $result->stdout    , ''                           , 'nothing on stdout' );
   is(   $result->stderr    , ''                           , 'nothing on stderr'  );
   like( $result->error     , qr/That is not a valid ISBN/ , 'expected exception' );
-  is(   $result->exit_code , 9                            , 'expected exit code' );
+  is(   $result->exit_code , -1                           , 'expected exit code' );
 }
 
 sub add_book_title_author_pages :Tests(9) {
