@@ -16,6 +16,7 @@ __PACKAGE__->add_columns(
   'book_id'       => { data_type => 'INTEGER'  , is_foreign_key => 1    } ,
   'start'         => { data_type => 'DATE'     , accessor => '_start'   } ,
   'finish'        => { data_type => 'DATE'     , accessor => '_finish'  , is_nullable => 1 } ,
+  'finished'      => { data_type => 'INTEGER'  , size => 1 , is_nullable => 1 } ,
   'last_modified' => { data_type => 'DATETIME' , set_on_create => 1     , set_on_update => 1 } ,
   'rating'        => { data_type => 'INTEGER'  , size => 1 , is_nullable => 1 } ,
   'review'        => { data_type => 'TEXT'     , is_nullable => 1 } ,
