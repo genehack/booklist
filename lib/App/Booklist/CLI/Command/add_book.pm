@@ -46,18 +46,11 @@ class App::Booklist::CLI::Command::add_book extends App::Booklist::CLI::BASE {
     cmd_aliases => 'T' ,
   );
 
-  method validate_arguments ( $opt , $args ) {
-    use Business::ISBN;
-
-    if ( my $isbn = Business::ISBN->new( $opt->{isbn} ) ) {
-      unless ( $isbn->is_valid ) {
-        $self->usage_error( "That is not a valid ISBN" );
-      }
-      $opt->{isbn} = $isbn->as_string;
-    }
-  }
-
   method execute ( $opt , $args ) {
+    if ( $opt->{isbn} ) {
+      $opt->{isbn} = $self->validate_isbn( $opt->{isbn} );
+    }
+
     my $schema = $self->get_schema;
 
     my $create_args = {

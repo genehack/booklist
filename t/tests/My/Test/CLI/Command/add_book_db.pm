@@ -73,6 +73,24 @@ sub add_book_title_author_isbn :Tests(9) {
   is( $author->id    , 1 );
 }
 
+sub add_book_title_author_bad_isbn :Tests(4) {
+  my $test = shift;
+
+  my $isbn = 15659272;
+
+  my @args = ( @{ $test->base_args} ,
+               '--title' , 'foo the musical' ,
+               '--author_id' , 1 ,
+               '--isbn' , $isbn ,
+             );
+  my $result = test_app( 'App::Booklist::CLI' => \@args );
+
+  is(   $result->stdout    , ''                           , 'nothing on stdout' );
+  is(   $result->stderr    , ''                           , 'nothing on stderr'  );
+  like( $result->error     , qr/That is not a valid ISBN/ , 'expected exception' );
+  is(   $result->exit_code , 9                            , 'expected exit code' );
+}
+
 sub add_book_title_author_pages :Tests(9) {
   my $test = shift;
 

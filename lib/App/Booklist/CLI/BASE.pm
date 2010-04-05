@@ -6,6 +6,7 @@ extends 'MooseX::App::Cmd::Command';
 with 'MooseX::SimpleConfig';
 
 use App::Booklist::Schema;
+use Business::ISBN;
 use File::Basename;
 use File::Path      qw/ make_path /;
 use FindBin;
@@ -63,6 +64,16 @@ sub get_schema_and_deploy_db_if_needed {
     unless -e $db;
 
   return $self->get_schema;
+}
+
+sub validate_isbn {
+  my( $self , $isbn ) = @_;
+
+  $isbn = Business::ISBN->new( $isbn )
+    and $isbn->is_valid
+    or $self->usage_error( "That is not a valid ISBN" );
+
+  return $isbn->as_string;
 }
 
 1;
