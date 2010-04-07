@@ -30,7 +30,7 @@ class App::Booklist::CLI::Command::start_reading extends App::Booklist::CLI::BAS
       or $self->usage_error( 'Unable to locate book with ID=' . $self->id );
 
     foreach my $prev_reading ( $book->readings ) {
-      if ( $prev_reading->finish eq 'NOT DONE YET' ) {
+      if ( $prev_reading->finish eq 'NOT DONE' ) {
         $self->usage_error( 'That book is already being read.' );
       }
     }

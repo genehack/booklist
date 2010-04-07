@@ -49,7 +49,7 @@ sub complete_reading {
     or $self->usage_error( 'Unable to locate reading with ID=' . $self->id );
 
   $self->usage_error( 'That book is not currently being read.' )
-    if ( $reading->finish ne 'NOT DONE YET' );
+    if ( $reading->finish ne 'NOT DONE' );
 
   my $update_hash = { finish => $self->date };
   $update_hash->{review}   = $self->review if $self->review;

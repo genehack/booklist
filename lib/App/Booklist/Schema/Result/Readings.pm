@@ -43,7 +43,7 @@ sub finish {
 
   return $self->_finish( @_ ) if @_;
 
-  return $self->_finish ? $self->_finish->ymd('.') : 'NOT DONE YET';
+  return $self->_finish ? $self->_finish->ymd('.') : 'NOT DONE';
 }
 
 sub duration {
@@ -76,7 +76,7 @@ Returns the date the reading was started, formatted appropriately for display.
 =head2 finish
 
 Returns the date the reading was started, formatted appropriately for display,
-or the string 'NOT DONE YET' if the reading hasn't been completed.
+or the string 'NOT DONE' if the reading hasn't been completed.
 
 =head2 duration
 
