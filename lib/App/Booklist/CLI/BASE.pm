@@ -77,3 +77,62 @@ sub validate_isbn {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+App::Booklist::CLI::BASE - base class for commands
+
+=head1 AUTHOR
+
+John SJ Anderson, C<< <genehack at genehack.org> >>
+
+=head1 METHODS
+
+=head2 connect_to_db
+
+Connect to an App::Booklist::Schema and return the schema object. Will use the
+DB file from the 'file' attribute, or can be passed an optional argument
+that's a path to a different DB, in which case it will use that instead.
+
+=head2 deploy_db
+
+Uses the 'connect_to_db' method to get a schema object, and then uses that to
+deploy a fresh schema to the database. Will set the 'add_drop_table' flag
+depending on whether that DB file existed prior to the schema object
+connection.
+
+=head2 get_schema
+
+Checks for the existance of a DB file and either throws an exception (if not
+found) or returns a schema object (if found).
+
+=head2 get_schema_and_deploy_db_if_needed
+
+Like 'get_schema', but will deploy the database if the database file is not
+found.
+
+=head2 validate_isbn
+
+Wrapper around Business::ISBN that confirms that a given string is a valid
+ISBN. Throws a usage_error() if the ISBN is invalid, or returns the result of
+the Business::ISBN::as_string() method if it is valid.
+
+=head1 BUGS
+
+Please report any bugs or feature requests to C<bug-app-booklist at
+rt.cpan.org>, or through the web interface at
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=App-Booklist>.  I will be
+notified, and then you'll automatically be notified of progress on your bug as
+I make changes.
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright 2010 John SJ Anderson.
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of either: the GNU General Public License as published
+by the Free Software Foundation; or the Artistic License.
+
+See http://dev.perl.org/licenses/ for more information.
