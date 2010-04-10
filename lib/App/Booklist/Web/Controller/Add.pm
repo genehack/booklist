@@ -5,6 +5,7 @@ use namespace::autoclean;
 BEGIN {extends 'Catalyst::Controller'; }
 
 use App::Booklist::Form::Login;
+use App::Booklist::Form::Add::Author;
 use App::Booklist::Form::Add::Tag;
 
 sub auto :Private {
@@ -36,6 +37,27 @@ sub index :Path :Args(0) {
   my ( $self, $c ) = @_;
 
   $c->response->redirect( '/' );
+}
+
+sub author :Local {
+  my( $self , $c ) = @_;
+
+  my $form = App::Booklist::Form::Add::Author->new;
+
+  $c->stash(
+    form     => $form ,
+    template => 'add/author.tt' ,
+  );
+
+  if ( $form->process(
+    schema => $c->model( 'DB' )->schema ,
+    params => $c->request->parameters ,
+  )) {
+    $c->stash(
+      form    => App::Booklist::Form::Add::Author->new() ,
+      message => 'Author added.' ,
+    );
+  }
 }
 
 sub tag :Local {
