@@ -10,6 +10,22 @@ sub index :Path :Args(0) {
   $c->response->redirect( '/' );
 }
 
+sub authors :Local {
+  my( $self , $c , $id ) = @_;
+
+  if ( $id ) {
+    $c->stash(
+      author   => $c->model( 'DB::Authors' )->find( $id ) ,
+      template => 'list/author.tt' ,
+    );
+  } else {
+    $c->stash(
+      authors  => [ $c->model( 'DB::Authors' )->all ] ,
+      template => 'list/authors.tt' ,
+    );
+  }
+}
+
 sub tags :Local {
   my( $self , $c , $id ) = @_;
 
