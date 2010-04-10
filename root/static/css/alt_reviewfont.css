@@ -1,0 +1,64 @@
+body {
+	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+	background-color : #ffffff;
+}
+
+a {
+	font-weight : bold;
+	color : #b54b00;
+	text-decoration : none;
+}
+
+a:hover {
+	color : #FF9933;
+	text-decoration : underline;
+}
+
+/*
+ * here's the stuff I define.
+**/
+
+#main #content h1 {
+	font-weight : bold;
+	font-size : 14px;
+}
+
+#main #content h2 {
+        font-weight: normal;
+        font-size : 12px;
+        padding-left: 25px;
+        margin-top: 0px;
+}
+
+
+#main #content p {
+	font-size : 14px;
+	line-height : 18px;
+}
+
+#main #content li {
+  font-size: 14px;
+}
+
+#main #navigate h1 {
+	font-weight : bold;
+	font-size : 12px;
+}
+
+#main #navigate td {
+	font-size : 12px;
+}
+
+#main #navigate p {
+	font-size : 12px;
+	line-height : 18px;
+}
+
+/*
+ * classes here
+**/
+
+.author {
+   font-size : 12px;
+   font-weight : normal;
+}

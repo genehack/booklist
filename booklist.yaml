@@ -1,4 +1,5 @@
 ---
+sitetitle: Booklist
 file: __path_to(db/booklist.db)__
 Model::DB:
   connect_info:

@@ -39,9 +39,12 @@ sub begin :Private {
 }
 
 sub index :Path :Args(0) {
-    my ( $self, $c ) = @_;
+  my ( $self, $c ) = @_;
 
-    $c->response->body( $c->welcome_message );
+  $c->stash(
+    tags  => [ $c->model( 'DB::Tags' )->all     ] ,
+    books => [ $c->model( 'DB::Readings' )->all ] ,
+  )
 }
 
 sub default :Path {
