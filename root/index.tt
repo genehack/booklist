@@ -30,7 +30,7 @@
 
         <ul>
           <li><a href=[% c.uri_for( 'list/authors' ) %]>by author</a></li>
-          <li><a href=[% c.uri_for( 'list/titles'  ) %]>by title</a></li>
+          <li><a href=[% c.uri_for( 'list/books'   ) %]>by title</a></li>
           <li><a href=[% c.uri_for( 'list/ratings' ) %]>by rating</a></li>
         </ul>
         <p>

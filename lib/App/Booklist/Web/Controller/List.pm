@@ -26,6 +26,23 @@ sub authors :Local {
   }
 }
 
+sub books :Local {
+  my( $self , $c , $id ) = @_;
+
+  if ( $id ) {
+    $c->stash(
+      book     => $c->model( 'DB::Books' )->find( $id ) ,
+      template => 'list/book.tt' ,
+    );
+  }
+  else {
+    $c->stash(
+      books    => [ $c->model( 'DB::Books' )->all ] ,
+      template => 'list/books.tt' ,
+    );
+  }
+}
+
 sub tags :Local {
   my( $self , $c , $id ) = @_;
 

@@ -1,0 +1,14 @@
+[% title = 'Booklist' %]
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>[% c.config.sitetitle %]</title>
+  </head>
+  <body>
+    <ul>
+      [% FOREACH book IN books.sort( 'title' ) %]
+      <li><a href=[% c.uri_for( '/list/book/' _ book.id ) %]>[% book.title %]</a> by [% book.author_list %]</li>
+      [% END %]
+    </ul>
+  </body>
+</html>

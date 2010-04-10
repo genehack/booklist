@@ -1,0 +1,15 @@
+[% title = 'Booklist: Add Author' %]
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>[% title %]</title>
+  </head>
+  <body>
+    <h1>[% title %]</h1>
+
+    [% IF message %]<h2>[% message %]</h2>[% END %]
+
+    [% form.render %]
+
+  </body>
+</html>

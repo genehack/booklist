@@ -13,7 +13,7 @@
       <tr><td colspan=2>
         <ul>
         [% FOREACH book IN author.books %]
-          <li><a href=[% c.uri_for( '/list/book/' _ book.id ) %]>[% book.title %]</a></li>
+          <li><a href=[% c.uri_for( '/list/books/' _ book.id ) %]>[% book.title %]</a></li>
         [% END %]
       </tr>
       [% END %]

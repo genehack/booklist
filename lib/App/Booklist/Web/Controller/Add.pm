@@ -6,6 +6,7 @@ BEGIN {extends 'Catalyst::Controller'; }
 
 use App::Booklist::Form::Login;
 use App::Booklist::Form::Add::Author;
+use App::Booklist::Form::Add::Book;
 use App::Booklist::Form::Add::Tag;
 
 sub auto :Private {
@@ -57,6 +58,46 @@ sub author :Local {
       form    => App::Booklist::Form::Add::Author->new() ,
       message => 'Author added.' ,
     );
+  }
+}
+
+sub book :Local {
+  my( $self , $c ) = @_;
+
+  my $form = App::Booklist::Form::Add::Book->new;
+
+  my @authors = $c->model( 'DB::Authors' )->all();
+  my $author_list_options = [ map {
+    { value => $_->id , label => $_->full_name }
+  } sort { $a->lname cmp $b->lname } @authors ];
+
+  $form->field( 'author' )->options( $author_list_options );
+
+  $c->stash(
+    form     => $form ,
+    template => 'add/book.tt' ,
+  );
+
+  if ( $form->process(
+    params => $c->request->parameters ,
+  )) {
+    my $create_args;
+    foreach ( qw/ title isbn pages pubyear / ) {
+      $create_args->{$_} = $form->value->{ $_ }
+        if $form->value->{ $_ };
+    }
+
+    my $book = $c->model( 'DB::Books' )->create( $create_args );
+
+    ### FIXME multi author support
+    my $author = $c->model( 'DB::Authors' )->find($form->value->{ 'author' });
+    $book->add_to_authors( $author );
+
+    $c->stash(
+      form    => App::Booklist::Form::Add::Book->new ,
+      message => 'book added' ,
+    );
+
   }
 }
 

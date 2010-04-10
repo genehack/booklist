@@ -1,0 +1,33 @@
+[% title = 'Booklist' %]
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>[% c.config.sitetitle %]</title>
+  </head>
+  <body>
+    <table>
+      <tr><th>ID:</th><td>[% book.id %]</td></tr>
+      <tr><th>Name:</th><td>[% book.title %]</td></tr>
+      [% FOREACH author IN book.authors %]
+      <tr>
+        <th>Author:</th>
+        <td><a href=[% c.uri_for( '/list/authors/' _ author.id ) %]>[% author.full_name %]</a></td>
+      </tr>
+      [% END %]
+      [% IF book.pages %]
+      <tr><th>Pages:</th><td>[% book.pages %]</td></tr>
+      [% END %]
+      [% IF book.pubyear %]
+      <tr><th>Pubyear:</th><td>[% book.pubyear %]</td></tr>
+      [% END %]
+      [% IF book.isbn %]
+      <tr><th>ISBN:</th><td>[% book.isbn %]</td></tr>
+      [% END %]
+      [% IF book.readings %]
+      <tr><th colspan=2>Readings of this book:</th></tr>
+      <tr><td colspan=2>
+      ### FIXME put reading info here
+      </tr>
+      [% END %]
+  </body>
+</html>
