@@ -1,0 +1,21 @@
+[% title = 'Setup Booklist' %]
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>[% title %]</title>
+  </head>
+  <body>
+    <h1>[% title %]</h1>
+
+    <h2>Hi.</h2>
+
+    <p>
+      Welcome to Booklist. Before you can start tracking your reading,
+      you need to set up a username and password. This will let you
+      add books to your reading list.
+    </p>
+
+    [% form.render %]
+
+  </body>
+</html>

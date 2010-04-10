@@ -1,0 +1,5 @@
+---
+file: __path_to(db/booklist.db)__
+Model::DB:
+  connect_info:
+    dsn: 'dbi:SQLite:__path_to(db/booklist.db)__'

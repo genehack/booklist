@@ -7,6 +7,7 @@ use base 'DBIx::Class::Core';
 __PACKAGE__->table( 'user' );
 
 __PACKAGE__->add_columns(
+  'id'       => { data_type => 'INTEGER' , is_auto_increment => 1 } ,
   'username' => { data_type => 'VARCHAR' , size => 255 } ,
   'password' => { data_type => 'VARCHAR' , size => 255 } ,
 );

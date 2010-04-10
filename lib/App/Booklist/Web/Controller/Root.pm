@@ -4,7 +4,39 @@ use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller' }
 
+use App::Booklist::Form::Setup;
+
 __PACKAGE__->config(namespace => '');
+
+sub begin :Private {
+  my( $self , $c ) = @_;
+
+  unless ( -e $c->config->{file} ) {
+    $c->model( 'DB' )->schema->deploy();
+  }
+
+  if ( my $user = $c->model( 'DB::User' )->find({ id =>1 }) ) {
+    $c->stash( user => $user );
+  }
+  else {
+    my $form = App::Booklist::Form::Setup->new();
+    if ( $form->process( params => $c->request->parameters )) {
+      $c->model( 'DB::User' )->create({
+        id       => 1 ,
+        username => $form->value->{username} ,
+        password => $form->value->{password} ,
+      });
+      return;
+    }
+    else {
+      $c->stash(
+        form     => $form ,
+        template => 'setup.tt' ,
+      );
+      $c->detach()
+    }
+  }
+}
 
 sub index :Path :Args(0) {
     my ( $self, $c ) = @_;
