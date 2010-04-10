@@ -19,7 +19,7 @@ sub del_tag :Tests(4) {
   is(   $result->stdout    , ''                          , 'nothing on stdout'  );
   is(   $result->stderr    , ''                          , 'nothing on stderr'  );
   like( $result->error     , qr/Required option missing/ , 'expected exception' );
-  is(   $result->exit_code , -1                          , 'expected exit code' );
+  isnt( $result->exit_code , 1                           , 'expected exit code' );
 }
 
 sub del_tag_both :Tests(4) {
@@ -31,7 +31,7 @@ sub del_tag_both :Tests(4) {
   is(   $result->stdout    , ''                                  , 'nothing on stdout'  );
   is(   $result->stderr    , ''                                  , 'nothing on stderr'  );
   like( $result->error     , qr/Only one of .* may be specified/ , 'expected exception' );
-  is(   $result->exit_code , -1                                  , 'expected exit code' );
+  isnt( $result->exit_code , 1                                   , 'expected exit code' );
 }
 
 sub del_tag_id :Tests(5) {

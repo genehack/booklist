@@ -19,7 +19,7 @@ sub stop_reading :Tests(4) {
   is(   $result->stdout    , ''                          , 'nothing on stdout'  );
   is(   $result->stderr    , ''                          , 'nothing on stderr'  );
   like( $result->error     , qr/Required option missing/ , 'expected exception' );
-  is(   $result->exit_code , -1                          , 'expected exit code' );
+  isnt( $result->exit_code , 1                           , 'expected exit code' );
 }
 
 sub stop_reading_no_db :Tests {
