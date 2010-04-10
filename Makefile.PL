@@ -12,7 +12,12 @@ author   q{John SJ Anderson <genehack@genehack.org>};
 license  'perl';
 
 requires 'Catalyst::Action::RenderView';
+requires 'Catalyst::Authentication::Realm::SimpleDB';
+requires 'Catalyst::Plugin::Authentication';
 requires 'Catalyst::Plugin::ConfigLoader';
+requires 'Catalyst::Plugin::Session';
+requires 'Catalyst::Plugin::Session::Store::FastMmap';
+requires 'Catalyst::Plugin::Session::State::Cookie';
 requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Runtime' => '5.80022';
 requires 'Config::General';

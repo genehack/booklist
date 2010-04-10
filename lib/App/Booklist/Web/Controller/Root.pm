@@ -42,9 +42,17 @@ sub index :Path :Args(0) {
   my ( $self, $c ) = @_;
 
   $c->stash(
-    tags  => [ $c->model( 'DB::Tags' )->all     ] ,
-    books => [ $c->model( 'DB::Readings' )->all ] ,
+    template => 'index.tt' ,
+    tags     => [ $c->model( 'DB::Tags' )->all     ] ,
+    books    => [ $c->model( 'DB::Readings' )->all ] ,
   )
+}
+
+sub logout :Global {
+  my( $self , $c ) = @_;
+
+  $c->logout;
+  $c->response->redirect( '/' );
 }
 
 sub default :Path {

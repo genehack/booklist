@@ -27,6 +27,7 @@
         </p>
 
         <h1>{ my books }</h1>
+
         <ul>
           <li><a href=[% c.uri_for( 'authors' ) %]>by author</a></li>
           <li><a href=[% c.uri_for( 'titles'  ) %]>by title</a></li>
@@ -41,11 +42,26 @@
           [% END %]
         </p>
 
+        [% IF c.user %]
+        <h1>{ add }</h1>
+
+        <ul>
+          <li><a href=[% c.uri_for( 'add/author'  ) %]>author</a></li>
+          <li><a href=[% c.uri_for( 'add/book'    ) %]>book</a></li>
+          <li><a href=[% c.uri_for( 'add/reading' ) %]>reading</a></li>
+          <li><a href=[% c.uri_for( 'add/tag'     ) %]>tag</a></li>
+        </ul>
+        [% END %]
+
         <h2><span style="color:red">### FIXME date stuff here</span></h2>
 
         <h1>{ <a href=[% c.uri_for( 'rss' ) %] title="rss feed">rss</a> }</h1>
 
-        <h1>{ <a href=[% c.uri_for( 'add' ) %]>add book</a> }</h1>
+        [% IF c.user %]
+        <h1>{ <a href=[% c.uri_for( 'logout' ) %]>logout</a> }</h1>
+        [% ELSE %]
+        <h1>{ <a href=[% c.uri_for( 'add' ) %]>login</a> }</h1>
+        [% END %]
 
       </div>
 

@@ -8,6 +8,12 @@ use Catalyst qw/
     -Debug
     ConfigLoader
     Static::Simple
+
+    Authentication
+
+    Session
+    Session::Store::FastMmap
+    Session::State::Cookie
 /;
 
 extends 'Catalyst';
@@ -16,12 +22,16 @@ our $VERSION = '0.01';
 $VERSION = eval $VERSION;
 
 __PACKAGE__->config(
-    name => 'App::Booklist::Web',
-    # Disable deprecated behavior needed by old applications
-    disable_component_resolution_regex_fallback => 1,
-    'Plugin::ConfigLoader' => {
-      file => 'booklist.yaml' ,
-    }
+  disable_component_resolution_regex_fallback => 1,
+  name => 'App::Booklist::Web',
+  'Plugin::Authentication' => {
+    default => {
+      class         => 'SimpleDB' ,
+      user_model    => 'DB::User' ,
+      password_type => 'clear' ,
+    } ,
+  } ,
+  'Plugin::ConfigLoader' => { file => 'booklist.yaml' } ,
 );
 
 __PACKAGE__->setup();
