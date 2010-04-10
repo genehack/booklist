@@ -41,7 +41,8 @@ sub author_list {
   push @authors , $_->full_name
     foreach ( $self->authors );
 
-  if ( @authors == 2 ) { return join ' & ' , @authors }
+  if(    @authors == 1 ) { return @authors }
+  elsif( @authors == 2 ) { return join ' & ' , @authors }
   else {
     $authors[-1] = "& $authors[-1]";
     return join ', ' , @authors;
