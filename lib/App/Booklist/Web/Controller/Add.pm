@@ -5,6 +5,7 @@ use namespace::autoclean;
 BEGIN {extends 'Catalyst::Controller'; }
 
 use App::Booklist::Form::Login;
+use App::Booklist::Form::Add::Tag;
 
 sub auto :Private {
   my( $self , $c ) = @_;

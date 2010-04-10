@@ -29,16 +29,18 @@
         <h1>{ my books }</h1>
 
         <ul>
-          <li><a href=[% c.uri_for( 'authors' ) %]>by author</a></li>
-          <li><a href=[% c.uri_for( 'titles'  ) %]>by title</a></li>
-          <li><a href=[% c.uri_for( 'ratings' ) %]>by rating</a></li>
+          <li><a href=[% c.uri_for( 'list/authors' ) %]>by author</a></li>
+          <li><a href=[% c.uri_for( 'list/titles'  ) %]>by title</a></li>
+          <li><a href=[% c.uri_for( 'list/ratings' ) %]>by rating</a></li>
         </ul>
         <p>
           <strong>by tag:</strong>
           <br />
-          <a href=[% c.uri_for( 'tag' ) %]>all tags</a>
-          [% FOREACH tag IN tags %]
-          | <a href=[% c.uri_for( 'tag/' _ tag.id ) %][% tag.name %]</a>
+          <a href=[% c.uri_for( 'list/tags' ) %]>all tags</a>
+          <br/>
+          [% FOREACH tag IN tags.sort( 'name' ) %]
+          <a href=[% c.uri_for( 'list/tags/' _ tag.id ) %]>[% tag.name %]</a>
+          [% "|" UNLESS loop.last %]
           [% END %]
         </p>
 
