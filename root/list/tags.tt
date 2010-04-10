@@ -1,0 +1,14 @@
+[% title = 'Booklist' %]
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>[% c.config.sitetitle %]</title>
+  </head>
+  <body>
+    <ul>
+      [% FOREACH tag IN tags.sort( 'name' ) %]
+      <li><a href=[% c.uri_for( '/list/tags/' _ tag.id ) %]>[% tag.name %]</a></li>
+      [% END %]
+    </ul>
+  </body>
+</html>
