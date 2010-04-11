@@ -73,29 +73,29 @@ __END__
 
 App::Booklist::Web::Controller::Root - Root Controller for App::Booklist::Web
 
-=head1 DESCRIPTION
-
-[enter your description here]
-
 =head1 METHODS
 
 =head2 index
 
 The root page (/)
 
-=cut
+=head2 begin
+
+Utility routine; ensures that database exists, creating it if needed. Also
+makes sure that admin user has been added to the DB, getting it added if
+needed.
+
+=head2 logout
+
+Does what it says on the label
 
 =head2 default
 
 Standard 404 error page
 
-=cut
-
 =head2 end
 
 Attempt to render a view, if needed.
-
-=cut
 
 =head1 AUTHOR
 

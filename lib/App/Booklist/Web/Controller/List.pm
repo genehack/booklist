@@ -70,7 +70,17 @@ Catalyst Controller.
 
 =cut
 
-=head2 index
+=head2 authors
+
+Drives '/list/authors' and '/list/authors/$id'
+
+=head2 books
+
+Drives '/list/books' and '/list/books/$id'
+
+=head2 tags
+
+Drives '/list/tags' and '/list/tags/$id'
 
 =cut
 

@@ -132,17 +132,28 @@ __END__
 
 App::Booklist::Web::Controller::Add - Catalyst Controller
 
-=head1 DESCRIPTION
-
-Catalyst Controller.
-
 =head1 METHODS
 
-=cut
+=head2 auto
+
+Utility routine that verifies that there's a logged in user; redirects to
+login form if no user is found. Also processes the submitted login form.
 
 =head2 index
 
-=cut
+Utility routine that forces a login then redirects to '/'.
+
+=head2 author
+
+Handles '/add/author', both form display and processing
+
+=head2 book
+
+Handles '/add/book', both form display and processing
+
+=head2 tag
+
+Handles '/add/tag', both form display and processing
 
 =head1 AUTHOR
 
